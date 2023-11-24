@@ -1,0 +1,42 @@
+@startuml
+
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide enum methods
+hide interface attributes
+
+class MasterMindApp {
+  + {static} main(args: String[])
+}
+
+package views {
+  class TerminalView implements models.MasterMindObserver {}
+  class MenuWindowView implements models.MasterMindObserver {}
+  class SettingsWindowView implements models.MasterMindObserver {}
+  class GameWindowView implements models.MasterMindObserver {}
+  class EndWindowView implements models.MasterMindObserver {}
+}
+
+package controllers {
+  class MasterMindFacade {}
+}
+
+package models {
+  interface MasterMindObserver {}
+  enum GameMode {
+    +CLASSIC
+    +EASY
+    +NUMERIC
+  }
+  class MasterMind {}
+  class Game {}
+  class Round {}
+  interface DisplayCluesStrategy {}
+  class DisplayCluesFactory {}
+  class DisplayCluesClassic implements DisplayCluesStrategy {}
+  class DisplayCluesEasy implements DisplayCluesStrategy {}
+  class DisplayCluesNumeric implements DisplayCluesStrategy {}
+}
+
+@enduml
