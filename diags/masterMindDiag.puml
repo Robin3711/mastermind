@@ -1,5 +1,7 @@
 @startuml
 
+'Modifier types de relation et verbes
+
 skinparam style strictuml
 skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
@@ -29,7 +31,9 @@ package models {
     +EASY
     +NUMERIC
   }
-  class MasterMind {}
+  class MasterMind {
+    + addObserver(observer: MasterMindObserver)
+  }
   class Game {}
   class Round {}
   interface DisplayCluesStrategy {}
@@ -38,5 +42,50 @@ package models {
   class DisplayCluesEasy implements DisplayCluesStrategy {}
   class DisplayCluesNumeric implements DisplayCluesStrategy {}
 }
+
+'MasterMindApp
+MasterMindApp ..> "1\n- masterMind" models.MasterMind : > <<creates>>
+MasterMindApp ..> "1\n- masterMindFacade" controllers.MasterMindFacade : > <<creates>>
+MasterMindApp ..> "1\n- terminalView" views.TerminalView : > <<creates>>
+MasterMindApp ..> "1\n- menuWindowView "views.MenuWindowView : > <<creates>>
+
+'TerminalView
+
+'MenuWindowView
+MenuWindowView o--> "1\n- masterMindFacade" controllers.MasterMindFacade : > <<uses>>
+
+'SettingsWindowView
+SettingsWindowView o--> "1\n- masterMindFacade" controllers.MasterMindFacade : > <<uses>>
+SettingsWindowView ..> "*\n- gameModeComboBox" models.GameMode : > <<uses>>
+
+'GameWindowView
+
+'EndWindowView
+
+'MasterMindFacade
+MasterMindFacade o--> "1\n- masterMind" models.MasterMind : > <<owns>>
+MasterMindFacade ..> "1\n- settingsWindow" views.SettingsWindowView : > <<owns>>
+
+'MasterMindObserver
+
+'GameMode
+
+'MasterMind
+models.MasterMind o--> "*\n- observers" models.MasterMindObserver : > <<observes>>
+
+'Game
+
+'Round
+
+'DisplayCluesStrategy
+
+'DisplayCluesFactory
+
+'DisplayCluesClassic
+
+'DisplayCluesEasy
+
+'DisplayCluesNumeric
+
 
 @enduml
