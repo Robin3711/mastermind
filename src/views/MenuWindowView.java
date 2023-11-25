@@ -22,11 +22,11 @@ public class MenuWindowView extends JFrame implements MasterMindObserver {
         settingsButton.setAlignmentX(CENTER_ALIGNMENT);
         quitButton.setAlignmentX(CENTER_ALIGNMENT);
 
-        /*
+        // NEW
         startButton.addActionListener(e -> {
-            gameFacade.startGame();
+            masterMindFacade.startGame();
         });
-        */
+        // END NEW
 
         settingsButton.addActionListener(e -> {
             masterMindFacade.openSettingsWindow();

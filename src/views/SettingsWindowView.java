@@ -67,6 +67,16 @@ public class SettingsWindowView extends JFrame implements MasterMindObserver {
         JButton saveButton = new JButton("Save");
         saveButton.setAlignmentX(CENTER_ALIGNMENT);
 
+        // NEW
+        saveButton.addActionListener(e -> {
+            // Test
+            // Display the type of the selected item
+            System.out.println(gameModeComboBox.getSelectedItem().getClass().getName());
+            masterMindFacade.saveSettings((GameMode) gameModeComboBox.getSelectedItem(), nbRoundsSlider.getValue(), nbColorsSlider.getValue(), nbColorsInSolutionSlider.getValue(), nbAttemptsSlider.getValue());
+            this.dispose();
+        });
+        // END NEW
+
         this.add(gameModeComboBox, BorderLayout.CENTER);
         this.add(nbRoundsSlider, BorderLayout.CENTER);
         this.add(nbColorsSlider, BorderLayout.CENTER);
