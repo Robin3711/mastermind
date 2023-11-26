@@ -1,9 +1,15 @@
 package controllers;
 
+import models.ColorGenerator;
 import models.GameMode;
 import models.MasterMind;
 import views.GameWindowView;
 import views.SettingsWindowView;
+
+// NEW
+import java.util.List;
+import java.awt.Color;
+// END NEW
 
 public class MasterMindFacade {
     private MasterMind masterMind;
@@ -30,6 +36,10 @@ public class MasterMindFacade {
 
     public void startGame() {
         GameWindowView gameWindowView = new GameWindowView(masterMind);
+    }
+
+    public List<Color> generateDistinctColors(int nbColors ) {
+        return ColorGenerator.generateDistinctColors(nbColors);
     }
     // END NEW
 }

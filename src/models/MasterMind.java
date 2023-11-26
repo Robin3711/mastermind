@@ -44,5 +44,9 @@ public class MasterMind {
     public int getNbColorsInSolution() {
         return nbColorsInSolution;
     }
+
+    public int getNbColors() {
+        return nbColors;
+    }
     // END NEW
 }
