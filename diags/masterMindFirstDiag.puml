@@ -1,0 +1,184 @@
+@startuml
+
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide enum methods
+hide interface attributes
+
+/'
+Main :
+    - MasterMindApp
+
+Views :
+    Classes :
+        - MenuWindowView
+        - SettingsWindowView
+        - GameWindowView
+        - EndWindowView
+    Interfaces :
+        /
+    Enums :
+        /
+
+Controllers :
+    Classes :
+        - MasterMindController
+        - GameController
+    Interfaces :
+        /
+    Enums :
+        /
+
+Models :
+    Classes
+        - MasterMind
+        - Game
+        - Round
+        - Combination
+        - Pawn ?
+        - DisplayCluesFactory
+        - DisplayCluesClassic
+        - DisplayCluesEasy
+        - DisplayCluesNumeric
+    Interfaces
+        - DisplayCluesStrategy
+        - MasterMindObserver
+        - GameObserver
+        - RoundObserver
+    Enums
+        - PawnColor
+        - GameMode
+'/
+
+class MasterMindApp {
+    - main(args: String[])
+}
+
+package models {
+    class MasterMind {}
+    class Game {
+        - {static} _nbRounds: Integer
+        - _currentRoundNb: Integer
+        + Game()
+        + {static} setNbRounds(nbRounds: Integer)
+        + getNbRounds(): Integer
+        - startGame()
+        + nextRound()
+        - isGameOver(): Boolean
+        - launchNextRound()
+        - endGame()
+    }
+    class Round {
+        - {static} _nbAttempts: Integer
+        - _currentAttemptNb: Integer
+        + Round()
+        + {static} setNbAttempts(nbAttempts: Integer)
+        + getNbAttempts(): Integer
+        - startRound()
+        'nextAttempt() entraine des relations ?
+        - nextAttempt()
+        - isRoundOver(): Boolean
+        - launchNextAttempt()
+        'submitCombination entraine des relations (normallement)
+        + submitCombination(combination: Combination)
+        - endRound()
+    }
+    class Combination {
+        - {static} _nbColorsInCombination: Integer
+        + {static} setNbColorsInCombination(nbColorsInCombination: Integer)
+        + getNbColorsInCombination(): Integer
+        ~ getCombination(): PawnColor[]
+    }
+    class Solution extends Combination {
+        + generateSolution()
+        + compareWithCombination(combination: Combination): Clue[]
+        + isInSolution(pawnColor: PawnColor): Boolean
+    }
+    class DisplayCluesFactory {}
+    class DisplayCluesClassic implements DisplayCluesStrategy {}
+    class DisplayCluesEasy implements DisplayCluesStrategy {}
+    class DisplayCluesNumeric implements DisplayCluesStrategy {}
+
+    interface DisplayCluesStrategy <<interface>> {
+    }
+    interface MasterMindObserver <<interface>> {}
+    interface GameObserver <<interface>> {}
+    interface RoundObserver <<interface>> {}
+
+    enum PawnColor <<enum>> {
+        WHITE
+        RED
+        GREEN
+        BLUE
+        MAGENTA
+        YELLOW
+        ORANGE
+        PINK
+        DARK_GRAY
+        CYAN
+        BLACK
+        LIGHT_GRAY
+        GRAY
+    }
+    enum GameMode <<enum>> {
+        CLASSIC
+        EASY
+        NUMERIC
+    }
+    enum Clue <<enum>> {
+        WELL_PLACED
+        MISPLACED
+        WRONG
+    }
+}
+
+'Relations
+
+'Main
+
+
+
+'Models
+'MasterMind
+
+
+'Game
+Game *--> "1\n- round" Round
+
+'Round
+Round *--> "1\n- _solution" Solution
+
+'Combination
+Combination o--> "*\n- _pawns" PawnColor
+
+'DisplayCluesFactory
+
+
+'DisplayCluesClassic
+
+
+'DisplayCluesEasy
+
+
+'DisplayCluesNumeric
+
+
+'DisplayCluesStrategy
+
+
+'MasterMindObserver
+
+
+'GameObserver
+
+
+'RoundObserver
+
+
+'PawnColor
+
+
+'GameMode
+
+@enduml
