@@ -36,7 +36,7 @@ Models :
         - Game
         - Round
         - Combination
-        - Pawn ?
+        - Solution
         - DisplayCluesFactory
         - DisplayCluesClassic
         - DisplayCluesEasy
@@ -49,6 +49,7 @@ Models :
     Enums
         - PawnColor
         - GameMode
+        - Clue
 '/
 
 class MasterMindApp {
@@ -62,6 +63,7 @@ package models {
         - _currentRoundNb: Integer
         + Game()
         + {static} setNbRounds(nbRounds: Integer)
+        'Pas encore utilisé, à supprimer ?
         + getNbRounds(): Integer
         - startGame()
         + nextRound()
@@ -74,26 +76,33 @@ package models {
         - _currentAttemptNb: Integer
         + Round()
         + {static} setNbAttempts(nbAttempts: Integer)
+        'Pas encore utilisé, à supprimer ?
         + getNbAttempts(): Integer
         - startRound()
         'nextAttempt() entraine des relations ?
         - nextAttempt()
         - isRoundOver(): Boolean
         - launchNextAttempt()
-        'submitCombination entraine des relations (normallement)
+        'submitCombination entraine des relations (normallement) )?
         + submitCombination(combination: Combination)
         - endRound()
     }
     class Combination {
         - {static} _nbColorsInCombination: Integer
+        + Combination(pawns : PawnColor[])
         + {static} setNbColorsInCombination(nbColorsInCombination: Integer)
         + getNbColorsInCombination(): Integer
-        ~ getCombination(): PawnColor[]
     }
     class Solution extends Combination {
+        + Solution()
+        'generateSolution() entraine une relation avec PawnColor ?
         + generateSolution()
+        'compareWithCombination() entraine une relation avec Clue ?
         + compareWithCombination(combination: Combination): Clue[]
+        'isInSolution() entraine une relation avec PawnColor ?
         + isInSolution(pawnColor: PawnColor): Boolean
+        'isSolutionFound() entraine une relation avec Clue ?
+        + isSolutionFound(clues : Clue[]): Boolean
     }
     class DisplayCluesFactory {}
     class DisplayCluesClassic implements DisplayCluesStrategy {}
@@ -106,6 +115,7 @@ package models {
     interface GameObserver <<interface>> {}
     interface RoundObserver <<interface>> {}
 
+    'Baisser le nombre de couleurs à 9 (8 + 1 pour le vide), ou 8 (rien pour le vide)
     enum PawnColor <<enum>> {
         WHITE
         RED
@@ -144,13 +154,16 @@ package models {
 
 
 'Game
-Game *--> "1\n- round" Round
+'Bonne relation ? Bonne visibilité ?
+Game *--> "1\n- round" Round : > <<creates>>
 
 'Round
+'Bonne relation ?
 Round *--> "1\n- _solution" Solution
 
 'Combination
-Combination o--> "*\n- _pawns" PawnColor
+'Bonne relation ?
+Combination o--> "*\n# _pawns" PawnColor
 
 'DisplayCluesFactory
 
