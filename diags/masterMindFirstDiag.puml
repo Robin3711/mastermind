@@ -79,29 +79,24 @@ package models {
         'Pas encore utilisé, à supprimer ?
         + getNbAttempts(): Integer
         - startRound()
-        'nextAttempt() entraine des relations ?
         - nextAttempt()
         - isRoundOver(): Boolean
         - launchNextAttempt()
-        'submitCombination entraine des relations (normallement) )?
         + submitCombination(combination: Combination)
         - endRound()
     }
     class Combination {
         - {static} _nbColorsInCombination: Integer
+        # Combination()
         + Combination(pawns : PawnColor[])
         + {static} setNbColorsInCombination(nbColorsInCombination: Integer)
         + getNbColorsInCombination(): Integer
     }
     class Solution extends Combination {
         + Solution()
-        'generateSolution() entraine une relation avec PawnColor ?
         + generateSolution()
-        'compareWithCombination() entraine une relation avec Clue ?
         + compareWithCombination(combination: Combination): Clue[]
-        'isInSolution() entraine une relation avec PawnColor ?
         + isInSolution(pawnColor: PawnColor): Boolean
-        'isSolutionFound() entraine une relation avec Clue ?
         + isSolutionFound(clues : Clue[]): Boolean
     }
     class DisplayCluesFactory {}
@@ -117,19 +112,14 @@ package models {
 
     'Baisser le nombre de couleurs à 9 (8 + 1 pour le vide), ou 8 (rien pour le vide)
     enum PawnColor <<enum>> {
-        WHITE
         RED
         GREEN
         BLUE
-        MAGENTA
         YELLOW
         ORANGE
         PINK
-        DARK_GRAY
-        CYAN
-        BLACK
         LIGHT_GRAY
-        GRAY
+        MAGENTA
     }
     enum GameMode <<enum>> {
         CLASSIC
@@ -154,16 +144,21 @@ package models {
 
 
 'Game
-'Bonne relation ? Bonne visibilité ?
-Game *--> "1\n- round" Round : > <<creates>>
+Game ..> Round : > <<uses>>
 
 'Round
-'Bonne relation ?
-Round *--> "1\n- _solution" Solution
+Round *--> "1\n- _solution" Solution : > <<owns>>
+Round ..> Combination : > <<uses>>
+Round ..> Clue : > <<uses>>
 
 'Combination
-'Bonne relation ?
-Combination o--> "*\n# _pawns" PawnColor
+Combination o--> "*\n # _pawns" PawnColor : > <<contains>>
+
+'Solution
+Solution ..> PawnColor : > <<uses>>
+Solution ..> Clue : > <<uses>>
+
+'Clue
 
 'DisplayCluesFactory
 
