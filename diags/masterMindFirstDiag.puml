@@ -6,52 +6,6 @@ skinparam classFontStyle Bold
 hide enum methods
 hide interface attributes
 
-/'
-Main :
-    - MasterMindApp
-
-Views :
-    Classes :
-        - MenuWindowView
-        - SettingsWindowView
-        - GameWindowView
-        - EndWindowView
-    Interfaces :
-        /
-    Enums :
-        /
-
-Controllers :
-    Classes :
-        - MasterMindController
-        - GameController
-    Interfaces :
-        /
-    Enums :
-        /
-
-Models :
-    Classes
-        - MasterMind
-        - Game
-        - Round
-        - Combination
-        - Solution
-        - DisplayCluesFactory
-        - DisplayCluesClassic
-        - DisplayCluesEasy
-        - DisplayCluesNumeric
-    Interfaces
-        - DisplayCluesStrategy
-        - MasterMindObserver
-        - GameObserver
-        - RoundObserver
-    Enums
-        - PawnColor
-        - GameMode
-        - Clue
-'/
-
 class MasterMindApp {
     - main(args: String[])
 }
@@ -99,18 +53,29 @@ package models {
         + isInSolution(pawnColor: PawnColor): Boolean
         + isSolutionFound(clues : Clue[]): Boolean
     }
-    class DisplayCluesFactory {}
-    class DisplayCluesClassic implements DisplayCluesStrategy {}
-    class DisplayCluesEasy implements DisplayCluesStrategy {}
-    class DisplayCluesNumeric implements DisplayCluesStrategy {}
+    class GenerateCluesFactory {
+        + createClassic(): GenerateCluesStrategy
+        + createEasy(): GenerateCluesStrategy
+    }
+    class GenerateCluesClassic extends GenerateCluesTemplate implements GenerateCluesStrategy {
+        + CluesClassic()
+        + generateAdaptedClues(combinationSubmitted: Combination): Clue[]
+    }
+    class GenerateCluesEasy extends GenerateCluesTemplate implements GenerateCluesStrategy {
+        + CluesEasy()
+        + generateAdaptesClues(combinationSubmitted: Combination): Clue[]
+    }
+    class GenerateCluesTemplate {
+        + generateClues(combinationSubmitted: Combination): Clue[]
+    }
 
-    interface DisplayCluesStrategy <<interface>> {
+    interface GenerateCluesStrategy <<interface>> {
+        + generateAdaptedClues(combinationSubmitted: Combination): Clue[]
     }
     interface MasterMindObserver <<interface>> {}
     interface GameObserver <<interface>> {}
     interface RoundObserver <<interface>> {}
 
-    'Baisser le nombre de couleurs à 9 (8 + 1 pour le vide), ou 8 (rien pour le vide)
     enum PawnColor <<enum>> {
         RED
         GREEN
@@ -135,13 +100,7 @@ package models {
 
 'Relations
 
-'Main
-
-
-
 'Models
-'MasterMind
-
 
 'Game
 Game ..> Round : > <<uses>>
@@ -158,35 +117,21 @@ Combination o--> "*\n # _pawns" PawnColor : > <<contains>>
 Solution ..> PawnColor : > <<uses>>
 Solution ..> Clue : > <<uses>>
 
-'Clue
+'GenerateCluesFactory
+GenerateCluesFactory ..> GenerateCluesClassic : > <<uses>>
+GenerateCluesFactory ..> GenerateCluesEasy : > <<uses>>
+GenerateCluesFactory ..> GenerateCluesStrategy : > <<uses>>
 
-'DisplayCluesFactory
+'GenerateCluesClassic
+GenerateCluesClassic ..> Clue : > <<uses>>
 
+'GenerateCluesEasy
+GenerateCluesEasy ..> Clue : > <<uses>>
 
-'DisplayCluesClassic
+'GenerateCluesStrategy
+GenerateCluesStrategy ..> Clue : > <<uses>>
 
-
-'DisplayCluesEasy
-
-
-'DisplayCluesNumeric
-
-
-'DisplayCluesStrategy
-
-
-'MasterMindObserver
-
-
-'GameObserver
-
-
-'RoundObserver
-
-
-'PawnColor
-
-
-'GameMode
+'GenerateCluesTemplate
+GenerateCluesTemplate ..> Clue : > <<uses>>
 
 @enduml
