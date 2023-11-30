@@ -1,0 +1,99 @@
+@startuml
+
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide enum methods
+hide interface attributes
+
+class MasterMindApp
+{
+    - main(args: String[])
+}
+
+package models
+{
+class MasterMind
+{
+}
+class Game
+{
+    - {static} nbRounds: Integer
+    + {static} setNbRounds(nbRounds: Integer)
+    + getNbRounds(): Integer
+    + nextRound()
+    - isLastRound(): Boolean
+    - endGame()
+}
+
+class Round
+{
+    - {static} nbAttempts: Integer
+    + {static} setNbAttempts(nbAttempts: Integer)
+    + getNbAttempts(): Integer
+}
+
+class Combination
+{
+    - {static} nbColorsInCombination: Integer
+    + {static} setNbColorsInCombination(nbColorsInCombination: Integer)
+    + getNbColorsInCombination(): Integer
+}
+class Solution extends Combination {}
+
+class DisplayCluesFactory {}
+class DisplayCluesClassic implements DisplayCluesStrategy {}
+class DisplayCluesEasy implements DisplayCluesStrategy {}
+class DisplayCluesNumeric implements DisplayCluesStrategy {}
+
+interface DisplayCluesStrategy <<interface>>
+{
+    + generateClues(solution: Solution, combination: Combination): Clue[]
+}
+
+interface MasterMindObserver <<interface>> {}
+interface GameObserver <<interface>> {}
+interface RoundObserver <<interface>> {}
+
+enum PawnColor <<enum>>
+{
+        WHITE
+        RED
+        GREEN
+        BLUE
+        MAGENTA
+        YELLOW
+        ORANGE
+        PINK
+        DARK_GRAY
+        CYAN
+        BLACK
+        LIGHT_GRAY
+        GRAY
+}
+
+enum GameMode <<enum>>
+{
+        CLASSIC
+        EASY
+        NUMERIC
+}
+enum Clue <<enum>>
+{
+        WELL_PLACED
+        MISPLACED
+        WRONG
+}
+}
+
+Combination o--> "*\n- pawns" PawnColor
+Round o--> "correct combination" Solution
+Game o--> "*/1" Round
+
+MasterMind o--> DisplayCluesStrategy
+MasterMind o--> Clue
+MasterMind o--> GameMode
+
+Round o--> MasterMind
+
+@enduml
