@@ -6,52 +6,6 @@ skinparam classFontStyle Bold
 hide enum methods
 hide interface attributes
 
-/'
-Main :
-    - MasterMindApp
-
-Views :
-    Classes :
-        - MenuWindowView
-        - SettingsWindowView
-        - GameWindowView
-        - EndWindowView
-    Interfaces :
-        /
-    Enums :
-        /
-
-Controllers :
-    Classes :
-        - MasterMindController
-        - GameController
-    Interfaces :
-        /
-    Enums :
-        /
-
-Models :
-    Classes
-        - MasterMind
-        - Game
-        - Round
-        - Combination
-        - Solution
-        - DisplayCluesFactory
-        - DisplayCluesClassic
-        - DisplayCluesEasy
-        - DisplayCluesNumeric
-    Interfaces
-        - DisplayCluesStrategy
-        - MasterMindObserver
-        - GameObserver
-        - RoundObserver
-    Enums
-        - PawnColor
-        - GameMode
-        - Clue
-'/
-
 class MasterMindApp {
     - main(args: String[])
 }
@@ -79,57 +33,58 @@ package models {
         'Pas encore utilisé, à supprimer ?
         + getNbAttempts(): Integer
         - startRound()
-        'nextAttempt() entraine des relations ?
         - nextAttempt()
         - isRoundOver(): Boolean
         - launchNextAttempt()
-        'submitCombination entraine des relations (normallement) )?
         + submitCombination(combination: Combination)
         - endRound()
     }
     class Combination {
         - {static} _nbColorsInCombination: Integer
+        # Combination()
         + Combination(pawns : PawnColor[])
         + {static} setNbColorsInCombination(nbColorsInCombination: Integer)
         + getNbColorsInCombination(): Integer
     }
     class Solution extends Combination {
         + Solution()
-        'generateSolution() entraine une relation avec PawnColor ?
         + generateSolution()
-        'compareWithCombination() entraine une relation avec Clue ?
         + compareWithCombination(combination: Combination): Clue[]
-        'isInSolution() entraine une relation avec PawnColor ?
         + isInSolution(pawnColor: PawnColor): Boolean
-        'isSolutionFound() entraine une relation avec Clue ?
         + isSolutionFound(clues : Clue[]): Boolean
     }
-    class DisplayCluesFactory {}
-    class DisplayCluesClassic implements DisplayCluesStrategy {}
-    class DisplayCluesEasy implements DisplayCluesStrategy {}
-    class DisplayCluesNumeric implements DisplayCluesStrategy {}
+    class GenerateCluesFactory {
+        + createClassic(): GenerateCluesStrategy
+        + createEasy(): GenerateCluesStrategy
+    }
+    class GenerateCluesClassic extends GenerateCluesTemplate implements GenerateCluesStrategy {
+        + CluesClassic()
+        + generateAdaptedClues(combinationSubmitted: Combination): Clue[]
+    }
+    class GenerateCluesEasy extends GenerateCluesTemplate implements GenerateCluesStrategy {
+        + CluesEasy()
+        + generateAdaptesClues(combinationSubmitted: Combination): Clue[]
+    }
+    class GenerateCluesTemplate {
+        + generateClues(combinationSubmitted: Combination): Clue[]
+    }
 
-    interface DisplayCluesStrategy <<interface>> {
+    interface GenerateCluesStrategy <<interface>> {
+        + generateAdaptedClues(combinationSubmitted: Combination): Clue[]
     }
     interface MasterMindObserver <<interface>> {}
     interface GameObserver <<interface>> {}
     interface RoundObserver <<interface>> {}
 
-    'Baisser le nombre de couleurs à 9 (8 + 1 pour le vide), ou 8 (rien pour le vide)
     enum PawnColor <<enum>> {
-        WHITE
         RED
         GREEN
         BLUE
-        MAGENTA
         YELLOW
         ORANGE
         PINK
-        DARK_GRAY
-        CYAN
-        BLACK
         LIGHT_GRAY
-        GRAY
+        MAGENTA
     }
     enum GameMode <<enum>> {
         CLASSIC
@@ -145,53 +100,38 @@ package models {
 
 'Relations
 
-'Main
-
-
-
 'Models
-'MasterMind
-
 
 'Game
-'Bonne relation ? Bonne visibilité ?
-Game *--> "1\n- round" Round : > <<creates>>
+Game ..> Round : > <<uses>>
 
 'Round
-'Bonne relation ?
-Round *--> "1\n- _solution" Solution
+Round *--> "1\n- _solution" Solution : > <<owns>>
+Round ..> Combination : > <<uses>>
+Round ..> Clue : > <<uses>>
 
 'Combination
-'Bonne relation ?
-Combination o--> "*\n# _pawns" PawnColor
+Combination o--> "*\n # _pawns" PawnColor : > <<contains>>
 
-'DisplayCluesFactory
+'Solution
+Solution ..> PawnColor : > <<uses>>
+Solution ..> Clue : > <<uses>>
 
+'GenerateCluesFactory
+GenerateCluesFactory ..> GenerateCluesClassic : > <<uses>>
+GenerateCluesFactory ..> GenerateCluesEasy : > <<uses>>
+GenerateCluesFactory ..> GenerateCluesStrategy : > <<uses>>
 
-'DisplayCluesClassic
+'GenerateCluesClassic
+GenerateCluesClassic ..> Clue : > <<uses>>
 
+'GenerateCluesEasy
+GenerateCluesEasy ..> Clue : > <<uses>>
 
-'DisplayCluesEasy
+'GenerateCluesStrategy
+GenerateCluesStrategy ..> Clue : > <<uses>>
 
-
-'DisplayCluesNumeric
-
-
-'DisplayCluesStrategy
-
-
-'MasterMindObserver
-
-
-'GameObserver
-
-
-'RoundObserver
-
-
-'PawnColor
-
-
-'GameMode
+'GenerateCluesTemplate
+GenerateCluesTemplate ..> Clue : > <<uses>>
 
 @enduml
