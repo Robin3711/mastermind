@@ -1,6 +1,6 @@
 package models;
 
-public class Game implements GameObserver {
+public class Game implements RoundObserver {
     private int _nbRounds = 3;
     private int _currentRoundNb = 0;
     Round _currentRound;

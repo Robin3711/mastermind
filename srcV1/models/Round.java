@@ -7,7 +7,7 @@ public class Round {
     private int _nbAttempts = 10;
     private int _currentAttemptNb = 0;
     private final Solution _solution;
-    private GameObserver _gameObserver;
+    private List<Round> _observers = new List<Observers>;
 
     public Round(int nbAttempts, int nbColorsInCombination) {
         _solution = new Solution(nbColorsInCombination);

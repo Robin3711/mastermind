@@ -1,6 +1,6 @@
 package models;
 
-public interface GameObserver {
+public interface RoundObserver {
     void updateWinRound();
     void updateLoseRound(int score);
     void updateForfeitRound();
