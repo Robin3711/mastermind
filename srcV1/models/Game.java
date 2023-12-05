@@ -1,46 +1,52 @@
 package models;
 
-public class Game {
-    private static int _nbRounds = 3;
+public class Game implements GameObserver {
+    private int _nbRounds = 3;
     private int _currentRoundNb = 0;
-    public Game() {
+    Round _currentRound;
+
+    public Game(int nbRounds) {
         System.out.println("Game created");
-        startGame();
-    }
-    public static void setNbRounds(int nbRounds) {
-        _nbRounds = nbRounds;
+        this._nbRounds = nbRounds;
+        //startGame();
     }
 
-    public int getNbRounds() {
-        return _nbRounds;
+    public void updateWinRound() {
+        System.out.println("Round won");
     }
 
-    private void startGame() {
-        System.out.println("Game started");
-        nextRound();
+    public void updateLoseRound(int score) {
+        System.out.println("Round lost");
     }
 
-    public void nextRound() {
+    public void updateForfeitRound() {
+        System.out.println("Round forfeited");
+    }
+
+    public void nextRound(int nbAttempts, int nbColorsInCombination) {
         if (isGameOver()) {
             System.out.println("Game over");
             endGame();
             return;
         } else {
             System.out.println("Round " + _currentRoundNb + " started");
-            launchNextRound();
+            launchNextRound(nbAttempts, nbColorsInCombination);
         }
         System.out.println("Round " + _currentRoundNb + " ended");
         _currentRoundNb++;
-        nextRound();
     }
 
     private boolean isGameOver() {
         return _currentRoundNb == _nbRounds;
     }
 
-    private void launchNextRound() {
+    private void launchNextRound(int nbAttempts, int nbColorsInCombination) {
         System.out.println("Round " + _currentRoundNb + " launched");
-        new Round();
+        this._currentRound = new Round(nbAttempts, nbColorsInCombination);
+    }
+
+    public Round getCurrentRound() {
+        return _currentRound;
     }
 
     private void endGame() {

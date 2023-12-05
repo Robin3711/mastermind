@@ -12,47 +12,54 @@ class MasterMindApp {
 
 package models {
     class MasterMind {}
-    class Game {
-        - {static} _nbRounds: Integer
+    class Game implements GameObserver {
+        - _nbRounds: Integer
         - _currentRoundNb: Integer
-        + Game()
-        + {static} setNbRounds(nbRounds: Integer)
-        'Pas encore utilisé, à supprimer ?
-        + getNbRounds(): Integer
-        - startGame()
-        + nextRound()
+        + Game(nbRounds: Integer)
+        + updateWinRound()
+        + updateLoseRound()
+        + updateForfeitRound()
+        + nextRound(nbAttempts: Integer, nbColorsInCombination: Integer)
         - isGameOver(): Boolean
-        - launchNextRound()
+        - launchNextRound(nbAttempts: Integer, nbColorsInCombination: Integer)
+        - getCurrentRound(): Round
         - endGame()
     }
     class Round {
-        - {static} _nbAttempts: Integer
+        - _nbAttempts: Integer
         - _currentAttemptNb: Integer
-        + Round()
-        + {static} setNbAttempts(nbAttempts: Integer)
-        'Pas encore utilisé, à supprimer ?
-        + getNbAttempts(): Integer
-        - startRound()
+        + Round(nbAttempts: Integer, nbColorsInCombination: Integer)
+        + setObserver(observer: GameObserver)
+        - notifyWinRound()
+        - notifyLoseRound(score: Integer)
+        - notifyForfeitRound()
         - nextAttempt()
         - isRoundOver(): Boolean
         - launchNextAttempt()
         + submitCombination(combination: Combination)
+        - winRound()
+        - loseRound()
+        - forfeitRound()
         - endRound()
+        + getSolution(): Solution
     }
     class Combination {
-        - {static} _nbColorsInCombination: Integer
+        - _nbColorsInCombination: Integer
         # Combination()
-        + Combination(pawns : PawnColor[])
-        + {static} setNbColorsInCombination(nbColorsInCombination: Integer)
+        + Combination(nbColorsInCombination: Integer)
         + getNbColorsInCombination(): Integer
+        + setPawns(pawns: PawnColor[])
+        + getPawns(): PawnColor[]
     }
     class Solution extends Combination {
-        + Solution()
+        + Solution(nbColorsInCombination: Integer)
         + generateSolution()
         + compareWithCombination(combination: Combination): Clue[]
         + isInSolution(pawnColor: PawnColor): Boolean
         + isSolutionFound(clues : Clue[]): Boolean
+        + sortClues(clues: Clue[]): Clue[]
     }
+    /'
     class GenerateCluesFactory {
         + createClassic(): GenerateCluesStrategy
         + createEasy(): GenerateCluesStrategy
@@ -72,8 +79,13 @@ package models {
     interface GenerateCluesStrategy <<interface>> {
         + generateAdaptedClues(combinationSubmitted: Combination): Clue[]
     }
+    '/
     interface MasterMindObserver <<interface>> {}
-    interface GameObserver <<interface>> {}
+    interface GameObserver <<interface>> {
+        + updateWinRound()
+        + updateLoseRound(score: Integer)
+        + updateForfeitRound()
+    }
     interface RoundObserver <<interface>> {}
 
     enum PawnColor <<enum>> {
@@ -103,10 +115,11 @@ package models {
 'Models
 
 'Game
-Game ..> Round : > <<uses>>
+Game o--> "1\n- _currentRound" Round : > <<owns>>
 
 'Round
 Round *--> "1\n- _solution" Solution : > <<owns>>
+'Relation avec observer dans la partie GameObserver
 Round ..> Combination : > <<uses>>
 Round ..> Clue : > <<uses>>
 
@@ -117,6 +130,10 @@ Combination o--> "*\n # _pawns" PawnColor : > <<contains>>
 Solution ..> PawnColor : > <<uses>>
 Solution ..> Clue : > <<uses>>
 
+'GameObserver
+GameObserver <--o "1\n- _gameObserver" Round : > <<warns>>
+
+/'
 'GenerateCluesFactory
 GenerateCluesFactory ..> GenerateCluesClassic : > <<uses>>
 GenerateCluesFactory ..> GenerateCluesEasy : > <<uses>>
@@ -133,5 +150,13 @@ GenerateCluesStrategy ..> Clue : > <<uses>>
 
 'GenerateCluesTemplate
 GenerateCluesTemplate ..> Clue : > <<uses>>
+'/
+
+'Gestion des stratégies dans la vue, mais génération des indices dans le modèle
+'C'est le modèle qui renvoit les indices à la vue (triés ou non)
+'Tous les Round d'une même instance de Game
+
+'Finir modèles pour le mardi 5 inclus
+'Finir vues et controllers pour le dimanche 10 inclus (rendu 1)
 
 @enduml

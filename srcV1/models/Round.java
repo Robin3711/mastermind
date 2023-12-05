@@ -1,31 +1,40 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Round {
-    private static int _nbAttempts = 10;
+    private int _nbAttempts = 10;
     private int _currentAttemptNb = 0;
     private final Solution _solution;
+    private GameObserver _gameObserver;
 
-    public Round() {
-        _solution = new Solution();
-        startRound();
-    }
-    public static void setNbAttempts(int nbAttempts) {
+    public Round(int nbAttempts, int nbColorsInCombination) {
+        _solution = new Solution(nbColorsInCombination);
         _nbAttempts = nbAttempts;
+        //startRound();
     }
 
-    public int getNbAttempts() {
-        return _nbAttempts;
+    public void setObserver(GameObserver observer) {
+        _gameObserver = observer;
     }
 
-    private void startRound() {
-        System.out.println("Round started");
-        nextAttempt();
+    private void notifyWinRound() {
+        _gameObserver.updateWinRound();
+    }
+
+    private void notifyLoseRound(int score) {
+        _gameObserver.updateLoseRound(score);
+    }
+
+    private void notifyForfeitRound() {
+        _gameObserver.updateForfeitRound();
     }
 
     private void nextAttempt() {
         if (isRoundOver()) {
             System.out.println("Round over");
-            endRound();
+            loseRound();
             return;
         } else {
             System.out.println("Attempt " + _currentAttemptNb + " started");
@@ -43,23 +52,33 @@ public class Round {
         System.out.println("Attempt " + _currentAttemptNb + " launched");
     }
 
-    // TODO: ajouter à l'UML
     public void submitCombination(Combination combination) {
         Clue[] clues = _solution.compareWithCombination(combination);
         if (_solution.isSolutionFound(clues)) {
             System.out.println("Solution found");
-            endRound();
+            winRound();
         } else {
             System.out.println("Solution not found");
             nextAttempt();
         }
     }
 
+    private void loseRound() {
+        return;
+    }
+
+    private void winRound() {
+        return;
+    }
+
+    private void forfeitRound() {
+        return;
+    }
+
     private void endRound() {
         return;
     }
 
-    // TODO: supprimer, c'est pour les tests
     public Solution getSolution() {
         return _solution;
     }
