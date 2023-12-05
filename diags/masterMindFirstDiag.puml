@@ -59,6 +59,10 @@ package models {
         + isSolutionFound(clues : Clue[]): Boolean
         + sortClues(clues: Clue[]): Clue[]
     }
+    class Attempt
+    {
+        + Attempt()
+    }
     /'
     class GenerateCluesFactory {
         + createClassic(): GenerateCluesStrategy
@@ -121,8 +125,7 @@ Game o--> "1\n- _currentRound" Round : > <<owns>>
 'Round
 Round *--> "1\n- _solution" Solution : > <<owns>>
 'Relation avec observer dans la partie GameObserver
-Round ..> Combination : > <<uses>>
-Round ..> Clue : > <<uses>>
+Round *--> "*\n- _attempt" Attempt : > <<owns>>
 
 'Combination
 Combination o--> "*\n # _pawns" PawnColor : > <<contains>>
@@ -130,6 +133,10 @@ Combination o--> "*\n # _pawns" PawnColor : > <<contains>>
 'Solution
 Solution ..> PawnColor : > <<uses>>
 Solution ..> Clue : > <<uses>>
+Solution ..> Combination : > <<uses>>
+
+Attempt *--> "*\n- _clues" Clue : > <<owns>>
+Attempt *--> "1\n _combination" Combination : > <<owns>>
 
 'RoundObserver
 'RoundObserver <--o "*\n- _roundObserver" Round : > <<observes>>
