@@ -62,6 +62,8 @@ package models {
     class Attempt
     {
         + Attempt()
+        + getCombination() : Combination
+        + getClues() :  Clue[]
     }
     /'
     class GenerateCluesFactory {
