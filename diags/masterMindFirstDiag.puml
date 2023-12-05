@@ -12,13 +12,13 @@ class MasterMindApp {
 
 package models {
     class MasterMind {}
-    class Game implements GameObserver {
+    class Game {
         - _nbRounds: Integer
         - _currentRoundNb: Integer
         + Game(nbRounds: Integer)
-        + updateWinRound()
-        + updateLoseRound()
-        + updateForfeitRound()
+        '+ updateWinRound()
+        '+ updateLoseRound()
+        '+ updateForfeitRound()
         + nextRound(nbAttempts: Integer, nbColorsInCombination: Integer)
         - isGameOver(): Boolean
         - launchNextRound(nbAttempts: Integer, nbColorsInCombination: Integer)
@@ -30,16 +30,16 @@ package models {
         - _currentAttemptNb: Integer
         + Round(nbAttempts: Integer, nbColorsInCombination: Integer)
         + setObserver(observer: GameObserver)
-        - notifyWinRound()
-        - notifyLoseRound(score: Integer)
-        - notifyForfeitRound()
+        '- notifyWinRound()
+        '- notifyLoseRound(score: Integer)
+        '- notifyForfeitRound()
         - nextAttempt()
         - isRoundOver(): Boolean
         - launchNextAttempt()
         + submitCombination(combination: Combination)
-        - winRound()
-        - loseRound()
-        - forfeitRound()
+        '- winRound()
+        '- loseRound()
+        '- forfeitRound()
         - endRound()
         + getSolution(): Solution
     }
@@ -80,13 +80,14 @@ package models {
         + generateAdaptedClues(combinationSubmitted: Combination): Clue[]
     }
     '/
-    interface MasterMindObserver <<interface>> {}
-    interface GameObserver <<interface>> {
+
+    /'
+    interface RoundObserver <<interface>> {
         + updateWinRound()
         + updateLoseRound(score: Integer)
         + updateForfeitRound()
     }
-    interface RoundObserver <<interface>> {}
+    '/
 
     enum PawnColor <<enum>> {
         RED
@@ -130,8 +131,8 @@ Combination o--> "*\n # _pawns" PawnColor : > <<contains>>
 Solution ..> PawnColor : > <<uses>>
 Solution ..> Clue : > <<uses>>
 
-'GameObserver
-GameObserver <--o "1\n- _gameObserver" Round : > <<warns>>
+'RoundObserver
+'RoundObserver <--o "*\n- _roundObserver" Round : > <<observes>>
 
 /'
 'GenerateCluesFactory
@@ -154,7 +155,13 @@ GenerateCluesTemplate ..> Clue : > <<uses>>
 
 'Gestion des stratégies dans la vue, mais génération des indices dans le modèle
 'C'est le modèle qui renvoit les indices à la vue (triés ou non)
-'Tous les Round d'une même instance de Game
+'Tous les Round d'une même instance de Game ont des attributs communs, donc stocker dans Game ?
+'Stocker toutes les tentatives de la partie
+'Stocker tous les indices obtenus
+'Stocker tous les Round de la partie
+'Dictionnaire de dictionnaires ?
+'Comment prévenir Game que Round est terminé ?
+'Classe Attempt
 
 'Finir modèles pour le mardi 5 inclus
 'Finir vues et controllers pour le dimanche 10 inclus (rendu 1)
