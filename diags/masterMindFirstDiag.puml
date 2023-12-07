@@ -11,10 +11,12 @@ class MasterMindApp {
 }
 
 package models {
-    class MasterMind {}
+    'class MasterMind {}
     class Game {
-        - _nbRounds: Integer
-        - _currentRoundNb: Integer
+       ' - _nbRounds: Integer
+       ' - _currentRoundNb: Integer
+        - nbAttemptsRouds : Integer
+        t nbColorsInCombinationRounds : Integer
         + Game(nbRounds: Integer)
         '+ updateWinRound()
         '+ updateLoseRound()
@@ -26,14 +28,12 @@ package models {
         - endGame()
     }
     class Round {
-        - _nbAttempts: Integer
-        - _currentAttemptNb: Integer
         + Round(nbAttempts: Integer, nbColorsInCombination: Integer)
-        + setObserver(observer: GameObserver)
+        + setObserver(observer: RoundObserver)
         '- notifyWinRound()
         '- notifyLoseRound(score: Integer)
         '- notifyForfeitRound()
-        - nextAttempt()
+        - nextAttempt(combination: Combination, clues : Clue[])
         - isRoundOver(): Boolean
         - launchNextAttempt()
         + submitCombination(combination: Combination)
@@ -61,7 +61,7 @@ package models {
     }
     class Attempt
     {
-        + Attempt()
+        + Attempt(combination: Combination, clues : Clue[])
         + getCombination() : Combination
         + getClues() :  Clue[]
     }
@@ -122,12 +122,14 @@ package models {
 'Models
 
 'Game
-Game o--> "1\n- _currentRound" Round : > <<owns>>
+Game o--> "*\n- _rounds" Round : > <<owns>>
+Game ..> GameMode : > <<uses>>
 
 'Round
 Round *--> "1\n- _solution" Solution : > <<owns>>
 'Relation avec observer dans la partie GameObserver
 Round *--> "*\n- _attempt" Attempt : > <<owns>>
+Round *--> "1\n- _gameMode" GameMode : > <<owns>>
 
 'Combination
 Combination o--> "*\n # _pawns" PawnColor : > <<contains>>
@@ -139,6 +141,8 @@ Solution ..> Combination : > <<uses>>
 
 Attempt *--> "*\n- _clues" Clue : > <<owns>>
 Attempt *--> "1\n _combination" Combination : > <<owns>>
+
+MasterMindApp *--> "1\n _game" Game : > <<owns>>
 
 'RoundObserver
 'RoundObserver <--o "*\n- _roundObserver" Round : > <<observes>>
