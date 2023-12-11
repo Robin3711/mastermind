@@ -18,7 +18,7 @@ public class MasterMindApp {
         //Combination solution = new Solution(nbColorsInCombination);
 
         // Launch the next round
-        game.nextRound(nbAttempts, nbColorsInCombination);
+        game.nextRound(nbAttempts, nbColorsInCombination, gameMode);
 
         // Display the solution
         for (PawnColor pawnColor: game.getCurrentRound().getSolution().getPawns()) {
