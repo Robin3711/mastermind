@@ -133,5 +133,3 @@ Attempt *--> "1\n- _COMBINATION_SUBMITTED" Combination : > <<owns>>
 Attempt *--> "1\n- _CLUES" Clue : > <<owns>>
 
 @enduml
-
-'Modif rapport : dire que y'a pas de code, pas possible de changer de GameMode en cours de manche à cause du calcul du score
