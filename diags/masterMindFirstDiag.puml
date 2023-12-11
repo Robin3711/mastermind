@@ -1,0 +1,135 @@
+@startuml
+
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide enum methods
+hide interface attributes
+
+package views {
+    class MenuWindow {}
+    class GameWindow {}
+    class EndWindow {}
+}
+
+package controllers {
+    class MenuController {}
+    class GameController {}
+    class EndController {}
+}
+
+package models {
+    class Game {
+        - _NBROUNDSMAX: Integer
+        + Game(nbRounds: Integer)
+        + nextRound(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
+        - isGameOver(): Boolean
+        - createNextRound(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
+        + getCurrentRound(): Round
+        + getCurrentRoundNb(): Integer
+        - endGame()
+        + calculateScoreGame(): Integer
+    }
+    class Round {
+        - _NBATTEMPTS: Integer
+        + Round(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
+        - nextAttempt()
+        - isRoundOver(): Boolean
+        + submitCombination(combination: Combination)
+        + getCurrentAttempt(): Attempt
+        + getCurrentAttemptNb(): Integer
+        - endRound()
+        + calculateScoreRound(): Integer
+    }
+    class Combination {
+        - _NBCOLORSINCOMBINATION: Integer
+        # Combination()
+        + Combination(nbColorsInCombination: Integer)
+        + getNbColorsInCombination(): Integer
+        + setPawns(pawns: PawnColor[])
+        + getPawns(): PawnColor[]
+    }
+    class Solution extends Combination {
+        + Solution(nbColorsInCombination: Integer)
+        + generateSolution()
+        + compareWithCombination(combination: Combination): Clue[]
+        + isInSolution(pawnColor: PawnColor): Boolean
+        + isSolutionFound(clues : Clue[]): Boolean
+        + sortClues(clues: Clue[]): Clue[]
+    }
+    class Attempt {
+        + Attempt(combinationSubmitted: Combination, clues : Clue[])
+        + getCombinationSubmitted(): Combination
+        + getClues(): Clue[]
+        + calculateScoreAttempt(): Integer
+    }
+
+    enum PawnColor <<enum>> {
+        RED
+        GREEN
+        BLUE
+        YELLOW
+        ORANGE
+        PINK
+        LIGHT_GRAY
+        MAGENTA
+    }
+    enum GameMode <<enum>> {
+        CLASSIC
+        EASY
+        NUMERIC
+    }
+    enum Clue <<enum>> {
+        WELL_PLACED
+        MISPLACED
+        WRONG
+    }
+}
+
+'Relations
+
+'Views
+
+'MenuWindow
+MenuWindow ..> MenuController : > <<selects>>
+
+'GameWindow
+GameWindow ..> GameController : > <<selects>>
+
+'EndWindow
+EndWindow ..> EndController : > <<selects>>
+
+'Controllers
+
+'GameController
+GameController o--> "1\n- _game" Game : > <<handles>>
+
+'Models
+
+'Game
+Game *--> "3..5\n- _rounds" Round : > <<owns>>
+Game ..> GameMode : > <<uses>>
+
+'Round
+Round *--> "1\n- _SOLUTION" Solution : > <<owns>>
+Round *--> "10..12\n- _attempts" Attempt : > <<owns>>
+Round *--> "1\n- _GAMEMODE" GameMode : > <<owns>>
+Round ..> Combination : > <<uses>>
+Round ..> Clue : > <<uses>>
+
+'Combination
+Combination o--> "4..6\n # _PAWNS" PawnColor : > <<contains>>
+
+'Solution
+Solution ..> PawnColor : > <<uses>>
+Solution ..> Clue : > <<uses>>
+Solution ..> Combination : > <<uses>>
+
+Attempt *--> "*\n- _clues" Clue : > <<owns>>
+Attempt *--> "1\n _combination" Combination : > <<owns>>
+
+'Attempt
+Attempt *--> "1\n- _COMBINATION_SUBMITTED" Combination : > <<owns>>
+Attempt *--> "1\n- _CLUES" Clue : > <<owns>>
+
+@enduml
