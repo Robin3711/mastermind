@@ -1,14 +1,17 @@
 package models;
 
 public class Round {
-    private final int _nbAttempts;
+    private final int _nbAttemptsMAX = 12;
     private final GameMode _gameMode;
     private final Solution _solution;
     private Attempt[] _attempts;
 
     public Round(int nbAttempts, int nbColorsInCombination, GameMode gameMode) {
         _solution = new Solution(nbColorsInCombination);
-        _nbAttempts = nbAttempts;
+        if(nbAttempts > _nbAttemptsMAX);
+        {
+            nbAttempts = _nbAttemptsMAX;
+        }
         _gameMode = gameMode;
         _attempts = new Attempt[nbAttempts];
     }
@@ -17,14 +20,14 @@ public class Round {
         int _currentAttemptNb = getCurrentAttemptNb() + 1;
         if (isRoundOver()) {
             System.out.println("Round over");
-            loseRound();
+            endRound(); // il y avait loseRound ici avant
             return;
         }
         System.out.println("Attempt " + _currentAttemptNb + " ended");
     }
 
     private boolean isRoundOver() {
-        return getCurrentAttemptNb() == _nbAttempts;
+        return getCurrentAttemptNb() == this._attempts.length-1;
     }
 
     public void submitCombination(Combination combination) {
@@ -33,7 +36,7 @@ public class Round {
         _attempts[getCurrentAttemptNb()] = attempt;
         if (_solution.isSolutionFound(clues)) {
             System.out.println("Solution found");
-            winRound();
+            endRound(); // il y avait winRound ici avant
         } else {
             System.out.println("Solution not found");
             nextAttempt();
@@ -45,7 +48,8 @@ public class Round {
     }
 
     public int getCurrentAttemptNb() {
-        for (int i = 0; i < _attempts.length; i++) {
+        for (int i = 0; i < _attempts.length; i++)
+        {
             if (_attempts[i] == null) {
                 return i;
             }
@@ -53,20 +57,17 @@ public class Round {
         return 0;
     }
 
-    private void loseRound() {
-        return;
-    }
-
-    private void winRound() {
-        return;
-    }
-
     private void endRound() {
         return;
     }
+    public  int calculateScoreRound()
+    {
+        return 0;
+    }
 
     // Uniquement pour les tests, pas sur l'UML
-    public Solution getSolution() {
+    public Solution getSolution()
+    {
         return _solution;
     }
 }

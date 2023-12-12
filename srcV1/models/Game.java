@@ -1,12 +1,14 @@
 package models;
 
 public class Game {
-    private int _nbRounds = 3;
+    private final int _nbRoundsMax = 3;
     private Round[] _rounds;
 
     public Game(int nbRounds) {
         System.out.println("Game created");
-        this._nbRounds = nbRounds;
+        if (nbRounds > _nbRoundsMax) {
+            nbRounds = _nbRoundsMax;
+        }
         this._rounds = new Round[nbRounds];
     }
 
@@ -24,7 +26,7 @@ public class Game {
     }
 
     private boolean isGameOver() {
-        return getCurrentRoundNb() == _nbRounds;
+        return getCurrentRoundNb() == this._rounds.length - 1;
     }
 
     private void createNextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode) {
@@ -47,5 +49,9 @@ public class Game {
 
     private void endGame() {
         return;
+    }
+
+    public int CalculateScoreGame() {
+        return  0;
     }
 }
