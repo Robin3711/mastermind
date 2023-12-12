@@ -123,10 +123,6 @@ Combination o--> "4..6\n # _PAWNS" PawnColor : > <<contains>>
 'Solution
 Solution ..> PawnColor : > <<uses>>
 Solution ..> Clue : > <<uses>>
-Solution ..> Combination : > <<uses>>
-
-Attempt *--> "*\n- _clues" Clue : > <<owns>>
-Attempt *--> "1\n _combination" Combination : > <<owns>>
 
 'Attempt
 Attempt *--> "1\n- _COMBINATION_SUBMITTED" Combination : > <<owns>>
