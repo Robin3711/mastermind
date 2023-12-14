@@ -20,7 +20,6 @@ package controllers {
 
 package models {
     class Game {
-        - _NBROUNDSMAX: Integer
         + Game(nbRounds: Integer)
         + nextRound(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
         - isGameOver(): Boolean
@@ -31,7 +30,6 @@ package models {
         + calculateScoreGame(): Integer
     }
     class Round {
-        - _NBATTEMPTS: Integer
         + Round(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
         - nextAttempt()
         - isRoundOver(): Boolean
@@ -127,9 +125,5 @@ Solution ..> Combination : > <<uses>>
 
 Attempt *--> "*\n- _clues" Clue : > <<owns>>
 Attempt *--> "1\n _combination" Combination : > <<owns>>
-
-'Attempt
-Attempt *--> "1\n- _COMBINATION_SUBMITTED" Combination : > <<owns>>
-Attempt *--> "1\n- _CLUES" Clue : > <<owns>>
 
 @enduml
