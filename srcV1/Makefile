@@ -3,7 +3,7 @@
 # Variables
 SRC = .
 MODELS = ./models
-#VIEWS = ./views
+VIEWS = ./views
 
 # Règles
 all: clean compile
@@ -13,16 +13,16 @@ clean:
 	@find $(SRC) -name "*.class" -type f -delete
 	@echo "Suppression des fichiers .class dans $(MODELS)"
 	@find $(MODELS) -name "*.class" -type f -delete
-	#@echo "Suppression des fichiers .class dans $(VIEWS)"
-	#@find $(VIEWS) -name "*.class" -type f -delete
+	@echo "Suppression des fichiers .class dans $(VIEWS)"
+	@find $(VIEWS) -name "*.class" -type f -delete
 
 compile:
 	@echo "Compilation des fichiers .java dans $(SRC)"
 	@javac $(SRC)/*.java
 	@echo "Compilation des fichiers .java dans $(MODELS)"
 	@javac $(MODELS)/*.java
-	#@echo "Compilation des fichiers .java dans $(VIEWS)"
-	#@javac $(VIEWS)/*.java
+	@echo "Compilation des fichiers .java dans $(VIEWS)"
+	@javac $(VIEWS)/*.java
 
 run:
 	# clean and compile then run

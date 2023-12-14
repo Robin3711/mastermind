@@ -6,9 +6,21 @@ skinparam classFontStyle Bold
 hide enum methods
 hide interface attributes
 
+class MasterMindApp {
+    + {static} main(args: String[])
+}
+
 package views {
-    class MenuWindow {}
-    class GameWindow {}
+    class MenuWindow {
+        - _nbRounds: Integer
+        - _nbColors: Integer
+        - _nbColorsInCombination: Integer
+        - _nbAttempts: Integer
+        + MenuWindow()
+    }
+    class GameWindowObserver {
+        + GameWindowObserver()
+    }
     class EndWindow {}
 }
 
@@ -88,21 +100,25 @@ package models {
 
 'Relations
 
+'MasterMindApp
+MasterMindApp ..> MenuWindow : > <<creates>>
+MasterMindApp ..> GameController : > <<creates>>
+
 'Views
 
 'MenuWindow
-MenuWindow ..> MenuController : > <<selects>>
+MenuWindow ..> GameController : > <<uses>>
 
-'GameWindow
-GameWindow ..> GameController : > <<selects>>
+'GameWindowObserver
+'GameWindow ..> GameController : > <<selects>>
 
 'EndWindow
-EndWindow ..> EndController : > <<selects>>
+'EndWindow ..> EndController : > <<selects>>
 
 'Controllers
 
 'GameController
-GameController o--> "1\n- _game" Game : > <<handles>>
+'GameController o--> "1\n- _game" Game : > <<handles>>
 
 'Models
 
