@@ -1,17 +1,17 @@
 package models;
 
 public class Round {
-    private final int _nbAttemptsMAX = 12;
-    private final GameMode _gameMode;
+    //private final int _nbAttemptsMAX = 12;
+    private final GameMode _gameMode;   // peut etre soumis a de futurs modifications
     private final Solution _solution;
     private Attempt[] _attempts;
 
     public Round(int nbAttempts, int nbColorsInCombination, GameMode gameMode) {
         _solution = new Solution(nbColorsInCombination);
-        if(nbAttempts > _nbAttemptsMAX);
+        /*if(nbAttempts > _nbAttemptsMAX);
         {
             nbAttempts = _nbAttemptsMAX;
-        }
+        }*/
         _gameMode = gameMode;
         _attempts = new Attempt[nbAttempts];
     }

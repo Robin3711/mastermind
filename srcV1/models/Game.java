@@ -1,31 +1,36 @@
 package models;
 
 public class Game {
-    private final int _nbRoundsMax = 3;
+    //private final int _nbRoundsMax = 3;
     private Round[] _rounds;
 
     public Game(int nbRounds) {
         System.out.println("Game created");
-        if (nbRounds > _nbRoundsMax) {
+        /*if (nbRounds > _nbRoundsMax)
+        {
             nbRounds = _nbRoundsMax;
-        }
+        }*/
         this._rounds = new Round[nbRounds];
     }
 
-    public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode) {
+    public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
+    {
         int _currentRoundNb = getCurrentRoundNb() + 1;
-        if (isGameOver()) {
+        if (isGameOver())
+        {
             System.out.println("Game over");
             endGame();
             return;
-        } else {
+        } else
+        {
             System.out.println("Round " + _currentRoundNb + " started");
             createNextRound(nbAttempts, nbColorsInCombination, gameMode);
         }
         System.out.println("Round " + _currentRoundNb + " ended");
     }
 
-    private boolean isGameOver() {
+    private boolean isGameOver()
+    {
         return getCurrentRoundNb() == this._rounds.length - 1;
     }
 
@@ -38,9 +43,12 @@ public class Game {
         return _rounds[getCurrentRoundNb() - 1];
     }
 
-    private int getCurrentRoundNb() {
-        for (int i = 0; i < _rounds.length; i++) {
-            if (_rounds[i] == null) {
+    private int getCurrentRoundNb()
+    {
+        for (int i = 0; i < _rounds.length; i++)
+        {
+            if (_rounds[i] == null)
+            {
                 return i;
             }
         }
@@ -51,7 +59,13 @@ public class Game {
         return;
     }
 
-    public int CalculateScoreGame() {
-        return  0;
+    public int CalculateScoreGame()
+    {
+        int score = 0;
+        for(int i = 0; i < _rounds.length; i++)
+        {
+            score += _rounds[i].calculateScoreRound();
+        }
+        return score;
     }
 }
