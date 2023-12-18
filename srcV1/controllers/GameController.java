@@ -2,20 +2,17 @@ package controllers;
 
 import models.Game;
 import models.GameMode;
+import models.PawnColor;
 import views.GameWindow;
 
 public class GameController {
-    Game _game;
-    String _username;
-    GameMode _gameMode;
-    int _nbRounds;
-    int _nbColors;
-    int _nbColorsInCombination;
-    int _nbAttempts;
-
-    public GameController() {
-
-    }
+    private Game _game;
+    private String _username;
+    private GameMode _gameMode;
+    private int _nbRounds;
+    private int _nbColors;
+    private int _nbColorsInCombination;
+    private int _nbAttempts;
 
     public void startGame(String username, GameMode gameMode, int nbRounds, int nbColors, int nbColorsInCombination, int nbAttempts) {
         this._username = username;
@@ -27,7 +24,7 @@ public class GameController {
         this._game = new Game(nbRounds);
 
         // Crée la vue du jeu
-        GameWindow gameWindow = new GameWindow();
+        GameWindow gameWindow = new GameWindow(this);
 
         _game.addObserver(gameWindow);
 
@@ -40,5 +37,37 @@ public class GameController {
         System.out.println("Number of colors: " + this._nbColors);
         System.out.println("Number of colors in the solution: " + this._nbColorsInCombination);
         System.out.println("Number of attempts: " + this._nbAttempts);
+    }
+
+    // getters
+    public Game getGame() {
+        return _game;
+    }
+
+    public String getUsername() {
+        return _username;
+    }
+
+    public GameMode getGameMode() {
+        return _gameMode;
+    }
+
+    public int getNbRounds() {
+        return _nbRounds;
+    }
+
+    public int getNbColors() {
+        return _nbColors;
+    }
+
+    public int getNbColorsInCombination() {
+        return _nbColorsInCombination;
+    }
+
+    public int getNbAttempts() {
+        return _nbAttempts;
+    }
+
+    public void submitCombination(PawnColor[] pawnColors) {
     }
 }

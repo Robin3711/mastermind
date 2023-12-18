@@ -1,8 +1,14 @@
 package models;
 
+import views.GameWindow;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Game {
     //private final int _nbRoundsMax = 3;
     private Round[] _rounds;
+    private List<GameObserver> _observers;
 
     public Game(int nbRounds) {
         System.out.println("Game created");
@@ -11,6 +17,7 @@ public class Game {
             nbRounds = _nbRoundsMax;
         }*/
         this._rounds = new Round[nbRounds];
+        _observers = new ArrayList<>();
     }
 
     public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
@@ -67,5 +74,15 @@ public class Game {
             score += _rounds[i].calculateScoreRound();
         }
         return score;
+    }
+
+    public void addObserver(GameObserver gameObserver) {
+        _observers.add(gameObserver);
+    }
+
+    private void notifyAttemptPerformed(Attempt attempt) {
+        for (GameObserver gameObserver: _observers) {
+            gameObserver.onAttemptPerformed(attempt);
+        }
     }
 }

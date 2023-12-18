@@ -6,21 +6,9 @@ skinparam classFontStyle Bold
 hide enum methods
 hide interface attributes
 
-class MasterMindApp {
-    + {static} main(args: String[])
-}
-
 package views {
-    class MenuWindow {
-        - _nbRounds: Integer
-        - _nbColors: Integer
-        - _nbColorsInCombination: Integer
-        - _nbAttempts: Integer
-        + MenuWindow()
-    }
-    class GameWindowObserver {
-        + GameWindowObserver()
-    }
+    class MenuWindow {}
+    class GameWindow {}
     class EndWindow {}
 }
 
@@ -32,6 +20,7 @@ package controllers {
 
 package models {
     class Game {
+        - _NBROUNDSMAX: Integer
         + Game(nbRounds: Integer)
         + nextRound(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
         - isGameOver(): Boolean
@@ -42,6 +31,7 @@ package models {
         + calculateScoreGame(): Integer
     }
     class Round {
+        - _NBATTEMPTS: Integer
         + Round(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
         - nextAttempt()
         - isRoundOver(): Boolean
@@ -98,25 +88,21 @@ package models {
 
 'Relations
 
-'MasterMindApp
-MasterMindApp ..> MenuWindow : > <<creates>>
-MasterMindApp ..> GameController : > <<creates>>
-
 'Views
 
 'MenuWindow
-MenuWindow ..> GameController : > <<uses>>
+MenuWindow ..> MenuController : > <<selects>>
 
-'GameWindowObserver
-'GameWindow ..> GameController : > <<selects>>
+'GameWindow
+GameWindow ..> GameController : > <<selects>>
 
 'EndWindow
-'EndWindow ..> EndController : > <<selects>>
+EndWindow ..> EndController : > <<selects>>
 
 'Controllers
 
 'GameController
-'GameController o--> "1\n- _game" Game : > <<handles>>
+GameController o--> "1\n- _game" Game : > <<handles>>
 
 'Models
 
@@ -137,5 +123,9 @@ Combination o--> "4..6\n # _PAWNS" PawnColor : > <<contains>>
 'Solution
 Solution ..> PawnColor : > <<uses>>
 Solution ..> Clue : > <<uses>>
+
+'Attempt
+Attempt *--> "1\n- _COMBINATION_SUBMITTED" Combination : > <<owns>>
+Attempt *--> "1\n- _CLUES" Clue : > <<owns>>
 
 @enduml

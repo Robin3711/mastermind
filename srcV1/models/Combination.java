@@ -16,10 +16,10 @@ public class Combination {
         return _nbColorsInCombination;
     }
 
-    public void setPawns(PawnColor[] pawns) throws Exception {
+    public void setPawns(PawnColor[] pawns) {
         // Verify that the number of pawns is correct
         if (pawns.length != getNbColorsInCombination()) {
-            throw new Exception("The number of pawns is incorrect");
+            return;
         }
         this._pawns = pawns;
     }
