@@ -2,7 +2,7 @@ package models;
 
 public class Round {
     //private final int _nbAttemptsMAX = 12;
-    private final GameMode _gameMode;   // peut etre soumis a de futurs modifications
+    private final GameMode _gameMode;   // peut etre soumis a de futures modifications
     private final Solution _solution;
     private Attempt[] _attempts;
 
@@ -26,21 +26,24 @@ public class Round {
         System.out.println("Attempt " + _currentAttemptNb + " ended");
     }
 
-    private boolean isRoundOver() {
-        return getCurrentAttemptNb() == this._attempts.length-1;
+    // package private
+    boolean isRoundOver() {
+        // A round is over when the current attempt is the last attempt or when the solution is found
+        return getCurrentAttemptNb() == _attempts.length || _solution.isSolutionFound(getCurrentAttempt().getClues());
     }
 
-    public void submitCombination(Combination combination) {
+    public Attempt submitCombination(Combination combination) {
         Clue[] clues = _solution.compareWithCombination(combination);
         Attempt attempt = new Attempt(combination, clues);
+        if (_gameMode == GameMode.CLASSIC) {
+            attempt.sortClues();
+        }
         _attempts[getCurrentAttemptNb()] = attempt;
         if (_solution.isSolutionFound(clues)) {
             System.out.println("Solution found");
-            endRound(); // il y avait winRound ici avant
-        } else {
-            System.out.println("Solution not found");
-            nextAttempt();
+
         }
+        return attempt;
     }
 
     public Attempt getCurrentAttempt() {
@@ -54,7 +57,7 @@ public class Round {
                 return i;
             }
         }
-        return 0;
+        return _attempts.length;
     }
 
     private void endRound() {

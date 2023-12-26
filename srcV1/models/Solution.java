@@ -12,6 +12,11 @@ public class Solution extends Combination {
         for (int i = 0; i < getNbColorsInCombination(); i++) {
             _pawns[i] = PawnColor.values()[(int) (Math.random() * PawnColor.values().length)];
         }
+        // Display solution
+        System.out.print("Solution: ");
+        for (int i = 0; i < getNbColorsInCombination(); i++) {
+            System.out.print(_pawns[i] + " ");
+        }
     }
 
     public Clue[] compareWithCombination(Combination combination) {
@@ -47,31 +52,5 @@ public class Solution extends Combination {
             }
         }
         return true;
-    }
-
-    public Clue[] sortClues(Clue[] clues) {
-        Clue[] sortedClues = new Clue[getNbColorsInCombination()];
-        int nbWellPlaced = 0;
-        int nbMisplaced = 0;
-        int nbWrong = 0;
-        for (int i = 0; i < getNbColorsInCombination(); i++) {
-            if (clues[i] == Clue.WELL_PLACED) {
-                nbWellPlaced++;
-            } else if (clues[i] == Clue.MISPLACED) {
-                nbMisplaced++;
-            } else {
-                nbWrong++;
-            }
-        }
-        for (int i = 0; i < nbWellPlaced; i++) {
-            sortedClues[i] = Clue.WELL_PLACED;
-        }
-        for (int i = nbWellPlaced; i < nbWellPlaced + nbMisplaced; i++) {
-            sortedClues[i] = Clue.MISPLACED;
-        }
-        for (int i = nbWellPlaced + nbMisplaced; i < nbWellPlaced + nbMisplaced + nbWrong; i++) {
-            sortedClues[i] = Clue.WRONG;
-        }
-        return sortedClues;
     }
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Combination;
 import models.Game;
 import models.GameMode;
 import models.PawnColor;
@@ -28,7 +29,7 @@ public class GameController {
 
         _game.addObserver(gameWindow);
 
-        this._game.nextRound(nbAttempts, nbColorsInCombination, gameMode);
+        _game.nextRound(nbAttempts, nbColorsInCombination, gameMode);
 
         // Affiche les paramètres de la partie
         System.out.println("Username: " + this._username);
@@ -69,5 +70,12 @@ public class GameController {
     }
 
     public void submitCombination(PawnColor[] pawnColors) {
+        Combination combination = new Combination(_nbColorsInCombination);
+        combination.setPawns(pawnColors);
+        _game.submitCombination(combination);
+    }
+
+    public void nextRound() {
+        _game.nextRound(_nbAttempts, _nbColorsInCombination, _gameMode);
     }
 }

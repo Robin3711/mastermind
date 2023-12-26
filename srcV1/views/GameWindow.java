@@ -22,7 +22,9 @@ public class GameWindow extends JFrame implements GameObserver {
     }};
     JPanel _combinationPanel = new JPanel();
     JPanel _boardPanel = new JPanel();
+    JPanel _cluesPanel = new JPanel();
     int _attemptIndex = 1;
+    private GameController _gameController;
 
     public GameWindow(GameController gameController) {
         super("Game");
@@ -30,6 +32,8 @@ public class GameWindow extends JFrame implements GameObserver {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
+
+        _gameController = gameController;
 
         JButton forfeitRoundButton = new JButton("Forfeit round");
         JButton forfeitGameButton = new JButton("Forfeit game");
@@ -47,10 +51,9 @@ public class GameWindow extends JFrame implements GameObserver {
         // gamePanel has nbAttempts rows and nbColorsInSolution columns, stocker infos dans variables ppour réutiliser
         _boardPanel.setLayout(new GridLayout(10, 4));
 
-        JPanel cluesPanel = new JPanel();
         // next to each line of boardPanel are the indices corresponding to the line stored in cluesPanel
         // clues can be in the form of dots of different colors or numbers
-        cluesPanel.setLayout(new GridLayout(10, 3));
+        _cluesPanel.setLayout(new GridLayout(10, 4));
 
         //JPanel combinationPanel = new JPanel();
         // combinationPanel has 1 row and nbColorsInSolution columns
@@ -69,6 +72,13 @@ public class GameWindow extends JFrame implements GameObserver {
             // Create a PawnColor array
             PawnColor[] pawnColors = new PawnColor[4];
             for (int i = 0; i < 4; i++) {
+                System.out.println("Prout");
+                // If the button has no text, it means that the user didn't choose a color for this pawn
+                if (((JButton) _combinationPanel.getComponent(i)).getText().equals("")) {
+                    JOptionPane.showMessageDialog(this, "You must choose a color for each pawn.");
+                    return;
+                }
+
                 pawnColors[i] = PawnColor.valueOf(((JButton) _combinationPanel.getComponent(i)).getText());
             }
 
@@ -77,7 +87,7 @@ public class GameWindow extends JFrame implements GameObserver {
         });
 
         buttonsPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLUE));
-        cluesPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.RED));
+        _cluesPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.RED));
         _combinationPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.GREEN));
         colorsPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.PINK));
         _boardPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK));
@@ -109,7 +119,7 @@ public class GameWindow extends JFrame implements GameObserver {
         gbc.gridheight = 3; // Augmente la hauteur pour être égal à boardPanel
         gbc.weightx = 0.2;
         gbc.weighty = 0.7;
-        this.add(cluesPanel, gbc);
+        this.add(_cluesPanel, gbc);
 
         gbc.gridx = 3;
         gbc.gridy = 0;
@@ -210,7 +220,6 @@ public class GameWindow extends JFrame implements GameObserver {
             _combinationPanel.add(button);
         }
 
-
         // Remplis colorsPanel avec des JButton
         for (PawnColor pawnColor : _pawnColorToColor.keySet()) {
             JButton button = new JButton();
@@ -222,20 +231,37 @@ public class GameWindow extends JFrame implements GameObserver {
             colorsPanel.add(button);
         }
 
-        setVisible(true);
-    }
+        // Remplis cluesPanel avec des JLabels
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 4; j++) {
 
-    private Component getComponentByName(Container container, String name) {
-        for (Component component : container.getComponents()) {
-            if (component.getName().equals(name)) {
-                return component;
+                JLabel label = new JLabel();
+                label.setOpaque(true);
+                label.setBackground(Color.WHITE);
+                label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+                _cluesPanel.add(label);
             }
         }
-        return null;
+
+        setVisible(true);
     }
 
     @Override
     public void onAttemptPerformed(Attempt attempt) {
+        // Get the JLabels of the actual row of boardPanel
+        Component[] boardPanelComponents = _boardPanel.getComponents();
+        JLabel[] boardPanelLabels = new JLabel[4];
+        for (int i = 0; i < 4; i++) {
+            boardPanelLabels[i] = (JLabel) boardPanelComponents[boardPanelComponents.length - 4 * _attemptIndex + i];
+        }
+
+        // Set the background color of the JLabels to the background color of the buttons of the combinationPanel
+        for (int i = 0; i < 4; i++) {
+            boardPanelLabels[i].setBackground(_combinationPanel.getComponent(i).getBackground());
+            System.out.println(_combinationPanel.getComponent(i).getBackground());
+        }
+
         // Remove the colors of the combinationPanel
         for (Component component : _combinationPanel.getComponents()) {
             JButton button = (JButton) component;
@@ -243,23 +269,75 @@ public class GameWindow extends JFrame implements GameObserver {
             button.setBackground(Color.WHITE);
         }
 
-        // Get the JLabels of the actual row of boardPanel
-        Component[] components = _boardPanel.getComponents();
-        JLabel[] labels = new JLabel[4];
+        // Get the JLabels of the actual row of cluesPanel
+        Component[] cluesPanelComponents = _cluesPanel.getComponents();
+        JLabel[] cluesPanelLabels = new JLabel[4];
         for (int i = 0; i < 4; i++) {
-            labels[i] = (JLabel) components[components.length - 4 * _attemptIndex + i];
+            cluesPanelLabels[i] = (JLabel) cluesPanelComponents[cluesPanelComponents.length - 4 * _attemptIndex + i];
         }
 
-        // Set the background color of the JLabels to the background color of the buttons of the combinationPanel
+        // Attempt has a getClues method which returns an array of Clue
+        // Clue is an enum with 3 values: WELL_PLACED, MISPLACED, WRONG
+        // If the value is WELL_PLACED, the JLabel should contain a red dot
+        // If the value is MISPLACED, the JLabel should contain a blue dot
+        // If the value is WRONG, the JLabel should contain a green dot
         for (int i = 0; i < 4; i++) {
-            labels[i].setBackground(_combinationPanel.getComponent(i).getBackground());
+            switch (attempt.getClues()[i]) {
+                case WELL_PLACED:
+                    cluesPanelLabels[i].setBackground(Color.RED);
+                    break;
+                case MISPLACED:
+                    cluesPanelLabels[i].setBackground(Color.BLUE);
+                    break;
+                case WRONG:
+                    cluesPanelLabels[i].setBackground(Color.GREEN);
+                    break;
+            }
         }
+
+        System.out.println("debug1");
 
         _attemptIndex++;
     }
 
     @Override
     public void onRoundFinished() {
+        System.out.println("debug2");
+        // Display a message to the user
+        JOptionPane.showMessageDialog(this, "Round finished");
+        // When the user clicks OK, the round should be reset
+        resetRound();
+    }
 
+    private void resetRound() {
+        // Reset the attempt index
+        _attemptIndex = 1;
+
+        // Reset the background color of the JLabels of the boardPanel
+        Component[] boardPanelComponents = _boardPanel.getComponents();
+        for (int i = 0; i < boardPanelComponents.length; i++) {
+            JLabel label = (JLabel) boardPanelComponents[i];
+            label.setBackground(Color.WHITE);
+        }
+
+        // Reset the background color of the JLabels of the cluesPanel
+        Component[] cluesPanelComponents = _cluesPanel.getComponents();
+        for (int i = 0; i < cluesPanelComponents.length; i++) {
+            JLabel label = (JLabel) cluesPanelComponents[i];
+            label.setBackground(Color.WHITE);
+        }
+
+        // Notify the controller that the round has been reset
+        _gameController.nextRound();
+    }
+
+    @Override
+    public void onGameFinished() {
+        // Display a message to the user
+        JOptionPane.showMessageDialog(this, "Game finished");
+
+        // When the user clicks OK, the game should be disposed and the menu window should be displayed
+        new MenuWindow(_gameController);
+        dispose();
     }
 }
