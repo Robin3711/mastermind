@@ -23,28 +23,17 @@ public class Attempt {
 
     public void sortClues() {
         int nbColorsInCombination = getNbColorsInCombination();
-        Clue[] sortedClues = new Clue[nbColorsInCombination];
-        int nbWellPlaced = 0;
-        int nbMisplaced = 0;
-        int nbWrong = 0;
-        for (int i = 0; i < nbColorsInCombination; i++) {
-            if (_clues[i] == Clue.WELL_PLACED) {
-                nbWellPlaced++;
-            } else if (_clues[i] == Clue.MISPLACED) {
-                nbMisplaced++;
-            } else {
-                nbWrong++;
+
+        // Tri par insertion
+        for (int i = 1; i < nbColorsInCombination; ++i) {
+            Clue key = _clues[i];
+            int j = i - 1;
+
+            while (j >= 0 && _clues[j].ordinal() > key.ordinal()) {
+                _clues[j + 1] = _clues[j];
+                j = j - 1;
             }
+            _clues[j + 1] = key;
         }
-        for (int i = 0; i < nbWellPlaced; i++) {
-            sortedClues[i] = Clue.WELL_PLACED;
-        }
-        for (int i = nbWellPlaced; i < nbWellPlaced + nbMisplaced; i++) {
-            sortedClues[i] = Clue.MISPLACED;
-        }
-        for (int i = nbWellPlaced + nbMisplaced; i < nbWellPlaced + nbMisplaced + nbWrong; i++) {
-            sortedClues[i] = Clue.WRONG;
-        }
-        _clues = sortedClues;
     }
 }
