@@ -24,8 +24,17 @@ public class Combination {
         this._pawns = pawns;
     }
 
-    // Pour les tests
     public PawnColor[] getPawns() {
         return _pawns;
+    }
+
+    protected int getNbOccurences(PawnColor pawnColor) {
+        int nbOccurences = 0;
+        for (PawnColor pawn: _pawns) {
+            if (pawn == pawnColor) {
+                nbOccurences++;
+            }
+        }
+        return nbOccurences;
     }
 }
