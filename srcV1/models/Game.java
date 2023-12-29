@@ -22,18 +22,12 @@ public class Game {
 
     public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
     {
-        int _currentRoundNb = getCurrentRoundNb() + 1;
-        if (isGameOver())
+        if (!isGameOver())
         {
-            System.out.println("Game over");
-            endGame();
-            return;
-        } else
-        {
-            System.out.println("Round " + _currentRoundNb + " started");
             createNextRound(nbAttempts, nbColorsInCombination, gameMode);
+        } else {
+            notifyGameFinished();
         }
-        System.out.println("Round " + _currentRoundNb + " ended");
     }
 
     private boolean isGameOver()

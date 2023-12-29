@@ -24,7 +24,7 @@ public class GameWindow extends JFrame implements GameObserver {
     JPanel _boardPanel = new JPanel();
     JPanel _cluesPanel = new JPanel();
     int _attemptIndex = 1;
-    private GameController _gameController;
+    private final GameController _gameController;
 
     public GameWindow(GameController gameController) {
         super("Game");
@@ -36,7 +36,15 @@ public class GameWindow extends JFrame implements GameObserver {
         _gameController = gameController;
 
         JButton forfeitRoundButton = new JButton("Forfeit round");
+        forfeitRoundButton.addActionListener(e -> {
+            onRoundFinished();
+        });
+
         JButton forfeitGameButton = new JButton("Forfeit game");
+        forfeitGameButton.addActionListener(e -> {
+            onGameFinished();
+        });
+
         JButton resetButton = new JButton("Reset combination");
         JButton submitButton = new JButton("Submit combination");
 
@@ -337,7 +345,7 @@ public class GameWindow extends JFrame implements GameObserver {
         JOptionPane.showMessageDialog(this, "Game finished");
 
         // When the user clicks OK, the game should be disposed and the menu window should be displayed
-        new MenuWindow(_gameController);
+        //new MenuWindow(_gameController);
         dispose();
     }
 }
