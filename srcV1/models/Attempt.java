@@ -1,26 +1,8 @@
 package models;
 
-<<<<<<< HEAD
-public class Attempt
-{
-    Combination combination;
-    Clue[] clues;
-    public Attempt(Combination newCombination, Clue[] newClues)
-    {
-        this.clues = newClues;
-        this.combination = newCombination;
-    }
-
-    public Combination getCombination() {
-        return combination;
-    }
-
-    public Clue[] getClues() {
-        return clues;
-=======
 public class Attempt {
     private final Combination _combinationSubmitted;
-    private final Clue[] _clues;
+    private Clue[] _clues;
 
     public Attempt(Combination combinationSubmitted, Clue[] clues) {
         _combinationSubmitted = combinationSubmitted;
@@ -33,6 +15,25 @@ public class Attempt {
 
     public Clue[] getClues() {
         return _clues;
->>>>>>> 3bb161a (Post rendu 1, code non cohérent avec UML)
+    }
+
+    private int getNbColorsInCombination() {
+        return _combinationSubmitted.getNbColorsInCombination();
+    }
+
+    public void sortClues() {
+        int nbColorsInCombination = getNbColorsInCombination();
+
+        // Tri par insertion
+        for (int i = 1; i < nbColorsInCombination; ++i) {
+            Clue key = _clues[i];
+            int j = i - 1;
+
+            while (j >= 0 && _clues[j].ordinal() > key.ordinal()) {
+                _clues[j + 1] = _clues[j];
+                j = j - 1;
+            }
+            _clues[j + 1] = key;
+        }
     }
 }

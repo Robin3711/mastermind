@@ -1,7 +1,10 @@
+import controllers.GameController;
 import models.*;
+import views.MenuWindow;
 
 public class MasterMindApp {
     public static void main(String[] args) throws Exception {
+        /*
         // Define parameters of the game
         int nbAttempts = 10;
         int nbRounds = 3;
@@ -95,6 +98,8 @@ public class MasterMindApp {
 
         // Submit the combination, round has the submitCombination method
         game.getCurrentRound().submitCombination(combination5);
-
+        */
+        GameController gameController = new GameController();
+        MenuWindow menuWindow = new MenuWindow(gameController);
     }
 }

@@ -16,16 +16,25 @@ public class Combination {
         return _nbColorsInCombination;
     }
 
-    public void setPawns(PawnColor[] pawns) throws Exception {
+    public void setPawns(PawnColor[] pawns) {
         // Verify that the number of pawns is correct
         if (pawns.length != getNbColorsInCombination()) {
-            throw new Exception("The number of pawns is incorrect");
+            return;
         }
         this._pawns = pawns;
     }
 
-    // Pour les tests
     public PawnColor[] getPawns() {
         return _pawns;
+    }
+
+    protected int getNbOccurences(PawnColor pawnColor) {
+        int nbOccurences = 0;
+        for (PawnColor pawn: _pawns) {
+            if (pawn == pawnColor) {
+                nbOccurences++;
+            }
+        }
+        return nbOccurences;
     }
 }
