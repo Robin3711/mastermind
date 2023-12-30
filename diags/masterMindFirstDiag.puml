@@ -6,45 +6,61 @@ skinparam classFontStyle Bold
 hide enum methods
 hide interface attributes
 
-class MasterMindApp {
-    - main(args: String[])
+package views {
+    class MenuWindow {}
+    class GameWindow {}
+    class EndWindow {}
+}
+
+package controllers {
+    class MenuController {}
+    class GameController {}
+    class EndController {}
 }
 
 package models {
+<<<<<<< HEAD
     'class MasterMind {}
     class Game {
        ' - _nbRounds: Integer
        ' - _currentRoundNb: Integer
         - nbAttemptsRouds : Integer
         t nbColorsInCombinationRounds : Integer
+=======
+    class Game {
+        - _NBROUNDSMAX: Integer
+>>>>>>> 3bb161a (Post rendu 1, code non cohérent avec UML)
         + Game(nbRounds: Integer)
-        '+ updateWinRound()
-        '+ updateLoseRound()
-        '+ updateForfeitRound()
-        + nextRound(nbAttempts: Integer, nbColorsInCombination: Integer)
+        + nextRound(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
         - isGameOver(): Boolean
-        - launchNextRound(nbAttempts: Integer, nbColorsInCombination: Integer)
-        - getCurrentRound(): Round
+        - createNextRound(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
+        + getCurrentRound(): Round
+        + getCurrentRoundNb(): Integer
         - endGame()
+        + calculateScoreGame(): Integer
     }
     class Round {
+<<<<<<< HEAD
         + Round(nbAttempts: Integer, nbColorsInCombination: Integer)
         + setObserver(observer: RoundObserver)
         '- notifyWinRound()
         '- notifyLoseRound(score: Integer)
         '- notifyForfeitRound()
         - nextAttempt(combination: Combination, clues : Clue[])
+=======
+        - _NBATTEMPTS: Integer
+        + Round(nbAttempts: Integer, nbColorsInCombination: Integer, gameMode: GameMode)
+        - nextAttempt()
+>>>>>>> 3bb161a (Post rendu 1, code non cohérent avec UML)
         - isRoundOver(): Boolean
-        - launchNextAttempt()
         + submitCombination(combination: Combination)
-        '- winRound()
-        '- loseRound()
-        '- forfeitRound()
+        + getCurrentAttempt(): Attempt
+        + getCurrentAttemptNb(): Integer
         - endRound()
-        + getSolution(): Solution
+        + calculateScoreRound(): Integer
     }
     class Combination {
-        - _nbColorsInCombination: Integer
+        - _NBCOLORSINCOMBINATION: Integer
         # Combination()
         + Combination(nbColorsInCombination: Integer)
         + getNbColorsInCombination(): Integer
@@ -59,6 +75,7 @@ package models {
         + isSolutionFound(clues : Clue[]): Boolean
         + sortClues(clues: Clue[]): Clue[]
     }
+<<<<<<< HEAD
     class Attempt
     {
         + Attempt(combination: Combination, clues : Clue[])
@@ -69,31 +86,14 @@ package models {
     class GenerateCluesFactory {
         + createClassic(): GenerateCluesStrategy
         + createEasy(): GenerateCluesStrategy
+=======
+    class Attempt {
+        + Attempt(combinationSubmitted: Combination, clues : Clue[])
+        + getCombinationSubmitted(): Combination
+        + getClues(): Clue[]
+        + calculateScoreAttempt(): Integer
+>>>>>>> 3bb161a (Post rendu 1, code non cohérent avec UML)
     }
-    class GenerateCluesClassic extends GenerateCluesTemplate implements GenerateCluesStrategy {
-        + CluesClassic()
-        + generateAdaptedClues(combinationSubmitted: Combination): Clue[]
-    }
-    class GenerateCluesEasy extends GenerateCluesTemplate implements GenerateCluesStrategy {
-        + CluesEasy()
-        + generateAdaptesClues(combinationSubmitted: Combination): Clue[]
-    }
-    class GenerateCluesTemplate {
-        + generateClues(combinationSubmitted: Combination): Clue[]
-    }
-
-    interface GenerateCluesStrategy <<interface>> {
-        + generateAdaptedClues(combinationSubmitted: Combination): Clue[]
-    }
-    '/
-
-    /'
-    interface RoundObserver <<interface>> {
-        + updateWinRound()
-        + updateLoseRound(score: Integer)
-        + updateForfeitRound()
-    }
-    '/
 
     enum PawnColor <<enum>> {
         RED
@@ -119,9 +119,26 @@ package models {
 
 'Relations
 
+'Views
+
+'MenuWindow
+MenuWindow ..> MenuController : > <<selects>>
+
+'GameWindow
+GameWindow ..> GameController : > <<selects>>
+
+'EndWindow
+EndWindow ..> EndController : > <<selects>>
+
+'Controllers
+
+'GameController
+GameController o--> "1\n- _game" Game : > <<handles>>
+
 'Models
 
 'Game
+<<<<<<< HEAD
 Game o--> "*\n- _rounds" Round : > <<owns>>
 Game ..> GameMode : > <<uses>>
 
@@ -130,9 +147,20 @@ Round *--> "1\n- _solution" Solution : > <<owns>>
 'Relation avec observer dans la partie GameObserver
 Round *--> "*\n- _attempt" Attempt : > <<owns>>
 Round *--> "1\n- _gameMode" GameMode : > <<owns>>
+=======
+Game *--> "3..5\n- _rounds" Round : > <<owns>>
+Game ..> GameMode : > <<uses>>
+
+'Round
+Round *--> "1\n- _SOLUTION" Solution : > <<owns>>
+Round *--> "10..12\n- _attempts" Attempt : > <<owns>>
+Round *--> "1\n- _GAMEMODE" GameMode : > <<owns>>
+Round ..> Combination : > <<uses>>
+Round ..> Clue : > <<uses>>
+>>>>>>> 3bb161a (Post rendu 1, code non cohérent avec UML)
 
 'Combination
-Combination o--> "*\n # _pawns" PawnColor : > <<contains>>
+Combination o--> "4..6\n # _PAWNS" PawnColor : > <<contains>>
 
 'Solution
 Solution ..> PawnColor : > <<uses>>
@@ -144,39 +172,10 @@ Attempt *--> "1\n _combination" Combination : > <<owns>>
 
 MasterMindApp *--> "1\n _game" Game : > <<owns>>
 
-'RoundObserver
-'RoundObserver <--o "*\n- _roundObserver" Round : > <<observes>>
-
-/'
-'GenerateCluesFactory
-GenerateCluesFactory ..> GenerateCluesClassic : > <<uses>>
-GenerateCluesFactory ..> GenerateCluesEasy : > <<uses>>
-GenerateCluesFactory ..> GenerateCluesStrategy : > <<uses>>
-
-'GenerateCluesClassic
-GenerateCluesClassic ..> Clue : > <<uses>>
-
-'GenerateCluesEasy
-GenerateCluesEasy ..> Clue : > <<uses>>
-
-'GenerateCluesStrategy
-GenerateCluesStrategy ..> Clue : > <<uses>>
-
-'GenerateCluesTemplate
-GenerateCluesTemplate ..> Clue : > <<uses>>
-'/
-
-'Gestion des stratégies dans la vue, mais génération des indices dans le modèle
-'C'est le modèle qui renvoit les indices à la vue (triés ou non)
-'Tous les Round d'une même instance de Game ont des attributs communs, donc stocker dans Game ?
-'Stocker toutes les tentatives de la partie
-'Stocker tous les indices obtenus
-'Stocker tous les Round de la partie
-'Dictionnaire de dictionnaires ?
-'Comment prévenir Game que Round est terminé ?
-'Classe Attempt
-
-'Finir modèles pour le mardi 5 inclus
-'Finir vues et controllers pour le dimanche 10 inclus (rendu 1)
+'Attempt
+Attempt *--> "1\n- _COMBINATION_SUBMITTED" Combination : > <<owns>>
+Attempt *--> "1\n- _CLUES" Clue : > <<owns>>
 
 @enduml
+
+'Modif rapport : dire que y'a pas de code, pas possible de changer de GameMode en cours de manche à cause du calcul du score
