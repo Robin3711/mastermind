@@ -80,7 +80,6 @@ public class GameWindow extends JFrame implements GameObserver {
             // Create a PawnColor array
             PawnColor[] pawnColors = new PawnColor[4];
             for (int i = 0; i < 4; i++) {
-                System.out.println("Prout");
                 // If the button has no text, it means that the user didn't choose a color for this pawn
                 if (((JButton) _combinationPanel.getComponent(i)).getText().equals("")) {
                     JOptionPane.showMessageDialog(this, "You must choose a color for each pawn.");
@@ -267,7 +266,6 @@ public class GameWindow extends JFrame implements GameObserver {
         // Set the background color of the JLabels to the background color of the buttons of the combinationPanel
         for (int i = 0; i < 4; i++) {
             boardPanelLabels[i].setBackground(_combinationPanel.getComponent(i).getBackground());
-            System.out.println(_combinationPanel.getComponent(i).getBackground());
         }
 
         // Remove the colors of the combinationPanel
@@ -289,24 +287,34 @@ public class GameWindow extends JFrame implements GameObserver {
         // If the value is WELL_PLACED, the JLabel should contain a red dot
         // If the value is MISPLACED, the JLabel should contain a blue dot
         // If the value is WRONG, the JLabel should contain a green dot
-        for (int i = 0; i < 4; i++) {
-            switch (attempt.getClues()[i]) {
-                case WELL_PLACED:
-                    cluesPanelLabels[i].setBackground(Color.RED);
-                    break;
-                case MISPLACED:
-                    cluesPanelLabels[i].setBackground(Color.BLUE);
-                    break;
-                case WRONG:
-                    cluesPanelLabels[i].setBackground(Color.GREEN);
-                    break;
+
+        if (_gameController.getGameMode() == GameMode.NUMERIC) {
+            // Display numeric clues
+            for (int i = 0; i < 4; i++) {
+                int numericClue = attempt.getNumericClues()[i];
+                // Display numeric clues in the JLabels
+                cluesPanelLabels[i].setText(Integer.toString(numericClue));
+            }
+        } else {
+            // Display colored dots
+            for (int i = 0; i < 4; i++) {
+                switch (attempt.getClues()[i]) {
+                    case WELL_PLACED:
+                        cluesPanelLabels[i].setBackground(Color.RED);
+                        break;
+                    case MISPLACED:
+                        cluesPanelLabels[i].setBackground(Color.BLUE);
+                        break;
+                    case WRONG:
+                        cluesPanelLabels[i].setBackground(Color.GREEN);
+                        break;
+                }
             }
         }
 
-        System.out.println("debug1");
-
         _attemptIndex++;
     }
+
 
     @Override
     public void onRoundFinished() {
@@ -349,3 +357,4 @@ public class GameWindow extends JFrame implements GameObserver {
         dispose();
     }
 }
+

@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Arrays;
+
 public class Attempt {
     private final Combination _combinationSubmitted;
     private Clue[] _clues;
@@ -15,6 +17,31 @@ public class Attempt {
 
     public Clue[] getClues() {
         return _clues;
+    }
+
+    public int[] getNumericClues()
+    {
+        int[] numericClues = new int[Clue.values().length];
+
+        Arrays.fill(numericClues, 0);
+
+        for(int i = 0; i < _clues.length; i++)
+        {
+            if(_clues[i] == Clue.WRONG)
+            {
+                numericClues[Clue.WRONG.ordinal()]++;
+            }
+            else if(_clues[i] == Clue.MISPLACED)
+            {
+                numericClues[Clue.MISPLACED.ordinal()]++;
+            }
+            else if(_clues[i] == Clue.WELL_PLACED)
+            {
+                numericClues[Clue.WELL_PLACED.ordinal()]++;
+            }
+        }
+
+        return numericClues;
     }
 
     private int getNbColorsInCombination() {
