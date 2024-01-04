@@ -78,4 +78,9 @@ public class GameController {
     public void nextRound() {
         _game.nextRound(_nbAttempts, _nbColorsInCombination, _gameMode);
     }
+    // calcul du score; peut etre a faire dans une class a part
+    public int getNbRoundsWon()
+    {
+        return _game.getNbRoundsWon();
+    }
 }

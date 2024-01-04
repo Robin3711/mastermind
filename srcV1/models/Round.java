@@ -6,8 +6,11 @@ public class Round {
     private final Solution _solution;
     private Attempt[] _attempts;
 
+    private boolean _isWon = false;
+
     public Round(int nbAttempts, int nbColorsInCombination, GameMode gameMode) {
         _solution = new Solution(nbColorsInCombination);
+        System.out.println("solution : " + _solution.toString());
         /*if(nbAttempts > _nbAttemptsMAX);
         {
             nbAttempts = _nbAttemptsMAX;
@@ -20,7 +23,6 @@ public class Round {
         int _currentAttemptNb = getCurrentAttemptNb() + 1;
         if (isRoundOver()) {
             System.out.println("Round over");
-            endRound(); // il y avait loseRound ici avant
             return;
         }
         System.out.println("Attempt " + _currentAttemptNb + " ended");
@@ -41,7 +43,7 @@ public class Round {
         _attempts[getCurrentAttemptNb()] = attempt;
         if (_solution.isSolutionFound(clues)) {
             System.out.println("Solution found");
-
+            _isWon = true;
         }
         return attempt;
     }
@@ -62,6 +64,11 @@ public class Round {
 
     private void endRound() {
         return;
+    }
+
+    public boolean getIsWon()
+    {
+        return _isWon;
     }
     public  int calculateScoreRound()
     {

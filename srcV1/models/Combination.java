@@ -37,4 +37,16 @@ public class Combination {
         }
         return nbOccurences;
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder value = new StringBuilder(" ");
+        for(int i = 0; i < this.getNbColorsInCombination(); i++)
+        {
+            value.append(this._pawns[i].name());
+            value.append(" ");
+        }
+        return value.toString();
+    }
 }

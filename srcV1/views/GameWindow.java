@@ -61,14 +61,20 @@ public class GameWindow extends JFrame implements GameObserver {
 
         // next to each line of boardPanel are the indices corresponding to the line stored in cluesPanel
         // clues can be in the form of dots of different colors or numbers
-        /*if(gameController.getGameMode() == GameMode.NUMERIC)
+
+        boolean isNumeric; // utilisé au moment de crée les Jlabel
+
+        if(gameController.getGameMode() == GameMode.NUMERIC)
         {
-            _cluesPanel.setLayout(new GridLayout(gameController.getNbAttempts(),3));
+            _cluesPanel.setLayout(new GridLayout(gameController.getNbAttempts(), 3));
+            isNumeric = true;
         }
         else
-        {*/
+        {
             _cluesPanel.setLayout(new GridLayout(gameController.getNbAttempts(), gameController.getNbColorsInCombination()));
-        //}
+            isNumeric = false;
+        }
+
 
         //JPanel combinationPanel = new JPanel();
         // combinationPanel has 1 row and nbColorsInSolution columns
@@ -188,8 +194,8 @@ public class GameWindow extends JFrame implements GameObserver {
 
         // Remplis boardPanel avec des JLabels
         for (int i = 0; i < gameController.getNbAttempts(); i++) {
-            for (int j = 0; j < gameController.getNbColorsInCombination(); j++) {
-
+            for (int j = 0; j < gameController.getNbColorsInCombination(); j++)
+            {
                 JLabel label = new JLabel();
                 label.setOpaque(true);
                 label.setBackground(Color.WHITE);
@@ -247,7 +253,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
         // Remplis cluesPanel avec des JLabels
         for (int i = 0; i < gameController.getNbAttempts(); i++) {
-            for (int j = 0; j < gameController.getNbColorsInCombination(); j++) {
+            for (int j = 0; j < (isNumeric ? 3 : gameController.getNbColorsInCombination()); j++) {
 
                 JLabel label = new JLabel();
                 label.setOpaque(true);
@@ -297,7 +303,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
         if (_gameController.getGameMode() == GameMode.NUMERIC) {
             // Display numeric clues
-            for (int i = 0; i < _gameController.getNbColorsInCombination(); i++) {
+            for (int i = 0; i < Clue.values().length; i++) {
                 int numericClue = attempt.getNumericClues()[i];
                 // Display numeric clues in the JLabels
                 cluesPanelLabels[i].setText(Integer.toString(numericClue));

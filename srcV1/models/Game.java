@@ -103,4 +103,18 @@ public class Game {
             gameObserver.onGameFinished();
         }
     }
+
+    public int getNbRoundsWon()
+    {
+        int nbRoundsWon = 0;
+
+        for(int i = 0; i < _rounds.length; i++)
+        {
+            if(_rounds[i].getIsWon())
+            {
+                nbRoundsWon++;
+            }
+        }
+        return nbRoundsWon;
+    }
 }

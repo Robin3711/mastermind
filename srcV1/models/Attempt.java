@@ -41,6 +41,11 @@ public class Attempt {
             }
         }
 
+        for(int i = 0; i < Clue.values().length; i++)
+        {
+            System.out.println(Clue.values()[i].name() +" " + numericClues[i]);
+        }
+
         return numericClues;
     }
 
