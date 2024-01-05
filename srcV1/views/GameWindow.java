@@ -290,7 +290,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
         // Get the JLabels of the actual row of cluesPanel
         Component[] cluesPanelComponents = _cluesPanel.getComponents();
-        JLabel[] cluesPanelLabels = new JLabel[_gameController.getNbColorsInCombination()];
+        JLabel[] cluesPanelLabels = new JLabel[3];
         for (int i = 0; i < cluesPanelLabels.length; i++) {
             cluesPanelLabels[i] = (JLabel) cluesPanelComponents[cluesPanelComponents.length - cluesPanelLabels.length * _attemptIndex + i];
         }
