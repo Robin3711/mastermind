@@ -331,7 +331,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
     @Override
     public void onRoundFinished() {
-        System.out.println("debug2");
+        System.out.println("roundFini");
         // Display a message to the user
         JOptionPane.showMessageDialog(this, "Round finished");
         // When the user clicks OK, the round should be reset
@@ -339,6 +339,7 @@ public class GameWindow extends JFrame implements GameObserver {
     }
 
     private void resetRound() {
+        System.out.println("resetRound");
         // Reset the attempt index
         _attemptIndex = 1;
 
@@ -363,11 +364,11 @@ public class GameWindow extends JFrame implements GameObserver {
     @Override
     public void onGameFinished() {
         // Display a message to the user
-        JOptionPane.showMessageDialog(this, "Game finished");
+        //JOptionPane.showMessageDialog(this, "Game finished");
 
         // When the user clicks OK, the game should be disposed and the menu window should be displayed
         //new MenuWindow(_gameController);
-        dispose();
+        //dispose();
     }
 }
 

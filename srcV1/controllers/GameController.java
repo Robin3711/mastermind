@@ -4,6 +4,7 @@ import models.Combination;
 import models.Game;
 import models.GameMode;
 import models.PawnColor;
+import views.EndWindow;
 import views.GameWindow;
 
 public class GameController {
@@ -75,12 +76,31 @@ public class GameController {
         _game.submitCombination(combination);
     }
 
-    public void nextRound() {
-        _game.nextRound(_nbAttempts, _nbColorsInCombination, _gameMode);
+    public void nextRound()
+    {
+        System.out.println("nextround");
+        if(_game.isGameOver())
+        {
+            System.out.println("isGameOver == true");
+            endGame();
+        }
+        else
+        {
+            _game.nextRound(_nbAttempts, _nbColorsInCombination, _gameMode);
+            System.out.println("isGameOver == false");
+        }
+
     }
     // calcul du score; peut etre a faire dans une class a part
     public int getNbRoundsWon()
     {
         return _game.getNbRoundsWon();
+    }
+
+    private void endGame()
+    {
+        // trouver un moyen de fermer la game windows
+        EndWindow endWindow = new EndWindow(this);
+        System.out.println("fin");
     }
 }
