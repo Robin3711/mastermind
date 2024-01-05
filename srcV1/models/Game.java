@@ -15,19 +15,13 @@ public class Game {
         _observers = new ArrayList<>();
     }
 
-    public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode) {
-        if (!isGameOver()) {
-            createNextRound(nbAttempts, nbColorsInCombination, gameMode);
-        } else {
-            notifyGameFinished();
-        }
-    }
-
-    private void createNextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode) {
+    public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
+    {
         int currentRoundIndex = getCurrentRoundNb();
         System.out.println("Round " + (currentRoundIndex) + " launched");
         _rounds[currentRoundIndex] = new Round(nbAttempts, nbColorsInCombination, gameMode);
     }
+
 
     public Round getCurrentRound() {
         return _rounds[getCurrentRoundNb()];

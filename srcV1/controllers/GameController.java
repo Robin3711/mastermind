@@ -30,7 +30,7 @@ public class GameController {
 
         _game.addObserver(gameWindow);
 
-        _game.nextRound(nbAttempts, nbColorsInCombination, gameMode);
+        nextRound();
 
         // Affiche les paramètres de la partie
         System.out.println("Username: " + this._username);
@@ -82,6 +82,7 @@ public class GameController {
         if(_game.isGameOver())
         {
             System.out.println("isGameOver == true");
+            // game notify round over
             endGame();
         }
         else
