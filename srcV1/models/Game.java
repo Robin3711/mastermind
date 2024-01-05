@@ -33,14 +33,26 @@ public class Game {
         return _rounds[getCurrentRoundNb()];
     }
 
-    private int getCurrentRoundNb() {
-        for (int i = 0; i < _rounds.length; i++) {
-            if (_rounds[i] == null) {
-                return i-1;
+    private int getCurrentRoundNb()
+    {
+        if(_rounds[0] == null)
+        {
+            System.out.println("aucun round ?!");
+            return 0;
+        }
+        for(int i = 1; i < _rounds.length; i++)
+        {
+            if(_rounds[i]==null)
+            {
+                System.out.println("vous etes au round"+ (i-1));
+                return i -1;
             }
         }
+
+        System.out.println("vous etes au dernier round, le round "+ (_rounds.length-1));
         return _rounds.length-1;
     }
+
 
     private void endGame() {
         return;
