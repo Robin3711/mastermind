@@ -26,6 +26,8 @@ public class GameWindow extends JFrame implements GameObserver {
     int _attemptIndex = 1;
     private final GameController _gameController;
 
+    boolean _isNumeric = false; // utilisé au moment de crée les Jlabel
+
     public GameWindow(GameController gameController) {
         super("Game");
         setSize(900, 900);
@@ -62,17 +64,16 @@ public class GameWindow extends JFrame implements GameObserver {
         // next to each line of boardPanel are the indices corresponding to the line stored in cluesPanel
         // clues can be in the form of dots of different colors or numbers
 
-        boolean isNumeric; // utilisé au moment de crée les Jlabel
 
         if(gameController.getGameMode() == GameMode.NUMERIC)
         {
             _cluesPanel.setLayout(new GridLayout(gameController.getNbAttempts(), 3));
-            isNumeric = true;
+            _isNumeric = true;
         }
         else
         {
             _cluesPanel.setLayout(new GridLayout(gameController.getNbAttempts(), gameController.getNbColorsInCombination()));
-            isNumeric = false;
+            _isNumeric = false;
         }
 
 
@@ -253,7 +254,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
         // Remplis cluesPanel avec des JLabels
         for (int i = 0; i < gameController.getNbAttempts(); i++) {
-            for (int j = 0; j < (isNumeric ? 3 : gameController.getNbColorsInCombination()); j++) {
+            for (int j = 0; j < (_isNumeric ? 3 : gameController.getNbColorsInCombination()); j++) {
 
                 JLabel label = new JLabel();
                 label.setOpaque(true);
@@ -290,7 +291,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
         // Get the JLabels of the actual row of cluesPanel
         Component[] cluesPanelComponents = _cluesPanel.getComponents();
-        JLabel[] cluesPanelLabels = new JLabel[3];
+        JLabel[] cluesPanelLabels = new JLabel[(_isNumeric ? 3 : _gameController.getNbColorsInCombination())];
         for (int i = 0; i < cluesPanelLabels.length; i++) {
             cluesPanelLabels[i] = (JLabel) cluesPanelComponents[cluesPanelComponents.length - cluesPanelLabels.length * _attemptIndex + i];
         }

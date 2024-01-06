@@ -87,4 +87,14 @@ public class Game {
     public boolean isGameOver() {
         return (_currentRound == _rounds.length && getCurrentRound().isRoundOver());
     }
+
+    public boolean getIsRoundWon(int x)
+    {
+        return _rounds[x].getIsWon();
+    }
+
+    public int getRoundScore(int x)
+    {
+        return _rounds[x].calculateScoreRound();
+    }
 }

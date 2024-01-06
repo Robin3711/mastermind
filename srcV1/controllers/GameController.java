@@ -102,6 +102,7 @@ public class GameController {
     {
         // trouver un moyen de fermer la game windows
         EndWindow endWindow = new EndWindow(this);
-        System.out.println("fin");
     }
+
+
 }
