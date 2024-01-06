@@ -72,7 +72,13 @@ public class Round {
     }
     public  int calculateScoreRound()
     {
-        return 0;
+        int[] indices = _attempts[getCurrentAttemptNb()-1].getNumericClues();
+        int score = 0;
+        score += (3*indices[0]);
+        score+=(indices[1]);
+        if(_gameMode == GameMode.NUMERIC || _gameMode == GameMode.CLASSIC)
+        {score += 4;}
+        return score;
     }
 
     // Uniquement pour les tests, pas sur l'UML
