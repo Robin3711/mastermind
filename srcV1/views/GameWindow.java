@@ -369,7 +369,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
         // When the user clicks OK, the game should be disposed and the menu window should be displayed
         //new MenuWindow(_gameController);
-        //dispose();
+        dispose();
     }
 }
 

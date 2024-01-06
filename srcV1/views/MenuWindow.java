@@ -36,6 +36,7 @@ public class MenuWindow extends JFrame {
             int nbColorsInCombination = nbColorsInCombinationSlider.getValue();
             int nbAttempts = nbAttemptsSlider.getValue();
             gameController.startGame(username, gameMode, nbRounds, nbColors, nbColorsInCombination, nbAttempts);
+            dispose();
 
         });
 

@@ -17,17 +17,24 @@ public class EndWindow extends JFrame
     public EndWindow(GameController gameController)
     {
         super("Game");
-        setSize(900, 900);
+        setSize(450, 200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
 
         this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
         //main Panel
 
-        String endMessage = "vous avez gagné " + gameController.getNbRoundsWon() + "round(s) sur " + gameController.getNbRounds() + ".";
+        String endMessage = "vous avez gagné " + gameController.getNbRoundsWon() + "round(s) sur " + gameController.getNbRounds() + ". votre score final est de "+ gameController.getGame().CalculateScoreGame();
         _mainPanel.add(new Label(endMessage));
+        _mainPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLUE));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        add(_mainPanel, gbc);
 
 
         //buttons Panel
@@ -42,10 +49,16 @@ public class EndWindow extends JFrame
         JButton restartGameButton = new JButton("rejouer");
         restartGameButton.addActionListener(e -> {
             gameController.startGame(gameController.getUsername(),gameController.getGameMode(),gameController.getNbRounds(),gameController.getNbColors(),gameController.getNbColorsInCombination(),gameController.getNbAttempts());
+            dispose();
         });
 
         _buttonsPanel.add(closeAppButton);
         _buttonsPanel.add(restartGameButton);
+        _buttonsPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.RED));
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        add(_buttonsPanel, gbc);
 
 
         // score panel
@@ -77,16 +90,14 @@ public class EndWindow extends JFrame
         {
             scorePanelLabel[i].setText("round " + (i/3));
             scorePanelLabel[i+1].setText(gameController.getGame().getIsRoundWon(i/3) ? "gagné" :"perdu");
-            scorePanelLabel[i+2].setText(String.valueOf(gameController.getGame().getRoundScore(i%3)));
+            scorePanelLabel[i+2].setText(String.valueOf(gameController.getGame().getRoundScore(i/3)));
         }
 
-        _mainPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLUE));
-        _buttonsPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.RED));
         _scorePanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.GREEN));
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        add(_scorePanel, gbc);
 
-        add(_mainPanel);
-        add(_buttonsPanel);
-        add(_scorePanel);
         setVisible(true);
     }
 }

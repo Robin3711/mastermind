@@ -84,8 +84,14 @@ public class Game {
         return nbRoundsWon;
     }
 
-    public boolean isGameOver() {
-        return (_currentRound == _rounds.length && getCurrentRound().isRoundOver());
+    public boolean isGameOver()
+    {
+        boolean over = (_currentRound == _rounds.length && getCurrentRound().isRoundOver());
+        if(over)
+        {
+            notifyGameFinished();
+        }
+        return over;
     }
 
     public boolean getIsRoundWon(int x)
