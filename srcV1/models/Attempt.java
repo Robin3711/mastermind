@@ -6,7 +6,8 @@ public class Attempt {
     private final Combination _combinationSubmitted;
     private Clue[] _clues;
 
-    public Attempt(Combination combinationSubmitted, Clue[] clues) {
+    public Attempt(Combination combinationSubmitted, Clue[] clues)
+    {
         _combinationSubmitted = combinationSubmitted;
         _clues = clues;
     }
@@ -53,7 +54,8 @@ public class Attempt {
         return _combinationSubmitted.getNbColorsInCombination();
     }
 
-    public void sortClues() {
+    public void sortClues()
+    {
         int nbColorsInCombination = getNbColorsInCombination();
 
         // Tri par insertion

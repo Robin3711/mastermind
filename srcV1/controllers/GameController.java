@@ -7,7 +7,8 @@ import models.PawnColor;
 import views.EndWindow;
 import views.GameWindow;
 
-public class GameController {
+public class GameController
+{
     private Game _game;
     private String _username;
     private GameMode _gameMode;
@@ -42,7 +43,8 @@ public class GameController {
     }
 
     // getters
-    public Game getGame() {
+    public Game getGame()
+    {
         return _game;
     }
 

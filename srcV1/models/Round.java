@@ -1,89 +1,76 @@
 package models;
 
-public class Round {
-    //private final int _nbAttemptsMAX = 12;
-    private final GameMode _gameMode;   // peut etre soumis a de futures modifications
+public class Round
+{
+
+    private final GameMode _gameMode;
     private final Solution _solution;
     private Attempt[] _attempts;
-
     private boolean _isWon = false;
 
-    public Round(int nbAttempts, int nbColorsInCombination, GameMode gameMode) {
-        _solution = new Solution(nbColorsInCombination);
-        System.out.println("solution : " + _solution.toString());
-        /*if(nbAttempts > _nbAttemptsMAX);
-        {
-            nbAttempts = _nbAttemptsMAX;
-        }*/
+    public Round(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
+    {
         _gameMode = gameMode;
+        _solution = new Solution(nbColorsInCombination);
         _attempts = new Attempt[nbAttempts];
     }
 
-    private void nextAttempt() {
-        int _currentAttemptNb = getCurrentAttemptNb() + 1;
-        if (isRoundOver()) {
-            System.out.println("Round over");
-            return;
-        }
-        System.out.println("Attempt " + _currentAttemptNb + " ended");
-    }
-
-    // package private
-    boolean isRoundOver() {
-        // A round is over when the current attempt is the last attempt or when the solution is found
+    boolean isRoundOver()
+    {
         return getCurrentAttemptNb() == _attempts.length || _solution.isSolutionFound(getCurrentAttempt().getClues());
     }
 
-    public Attempt submitCombination(Combination combination) {
-        Clue[] clues = _solution.compareWithCombination(combination);
-        Attempt attempt = new Attempt(combination, clues);
-        if (_gameMode == GameMode.CLASSIC) {
-            attempt.sortClues();
-        }
-        _attempts[getCurrentAttemptNb()] = attempt;
-        if (_solution.isSolutionFound(clues)) {
-            System.out.println("Solution found");
-            _isWon = true;
-        }
-        return attempt;
-    }
-
-    public Attempt getCurrentAttempt() {
+    public Attempt getCurrentAttempt()
+    {
         return _attempts[getCurrentAttemptNb() - 1];
     }
 
-    public int getCurrentAttemptNb() {
+    public int getCurrentAttemptNb()
+    {
         for (int i = 0; i < _attempts.length; i++)
         {
-            if (_attempts[i] == null) {
+            if (_attempts[i] == null)
+            {
                 return i;
             }
         }
         return _attempts.length;
     }
 
-    private void endRound() {
-        return;
-    }
-
     public boolean getIsWon()
     {
         return _isWon;
     }
+
     public  int calculateScoreRound()
     {
-        int[] indices = _attempts[getCurrentAttemptNb()-1].getNumericClues();
+        int[] numericClues = _attempts[getCurrentAttemptNb()-1].getNumericClues();
         int score = 0;
-        score += (3*indices[0]);
-        score+=(indices[1]);
+        score += (3*numericClues[0]);
+        score+=(numericClues[1]);
+
         if(_gameMode == GameMode.NUMERIC || _gameMode == GameMode.CLASSIC)
-        {score += 4;}
+        {
+            score += 4;
+        }
         return score;
     }
 
-    // Uniquement pour les tests, pas sur l'UML
-    public Solution getSolution()
+    public Attempt submitCombination(Combination combination)
     {
-        return _solution;
+        Clue[] clues = _solution.compareWithCombination(combination);
+        Attempt attempt = new Attempt(combination, clues);
+
+        if (_gameMode == GameMode.CLASSIC)
+        {
+            attempt.sortClues();
+        }
+        _attempts[getCurrentAttemptNb()] = attempt;
+
+        if (_solution.isSolutionFound(clues))
+        {
+            _isWon = true;
+        }
+        return attempt;
     }
 }

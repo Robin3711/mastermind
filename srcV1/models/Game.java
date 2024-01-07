@@ -5,79 +5,39 @@ import views.GameWindow;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
+public class Game
+{
     private Round[] _rounds;
     private List<GameObserver> _observers;
     private int _currentRound;
 
-    public Game(int nbRounds) {
-        System.out.println("Game created");
+    public Game(int nbRounds)
+    {
         this._rounds = new Round[nbRounds];
         _observers = new ArrayList<>();
         _currentRound = 0;
     }
 
-    public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode) {
-        System.out.println("Round " + (_currentRound + 1) + " launched");
-        _rounds[_currentRound] = new Round(nbAttempts, nbColorsInCombination, gameMode);
-        _currentRound++;
-    }
-
-    public Round getCurrentRound() {
-        return _rounds[_currentRound - 1];
-    }
-
-    private void endGame() {
-        return;
-    }
-
-    public int CalculateScoreGame() {
-        int score = 0;
-        for (Round round : _rounds) {
-            score += round.calculateScoreRound();
+    public Round getCurrentRound()
+    {
+        if (_currentRound > 0)
+        {
+            return _rounds[_currentRound - 1];
         }
-        return score;
-    }
-
-    public void addObserver(GameObserver gameObserver) {
-        _observers.add(gameObserver);
-    }
-
-    private void notifyAttemptPerformed(Attempt attempt) {
-        for (GameObserver gameObserver : _observers) {
-            gameObserver.onAttemptPerformed(attempt);
+        else
+        {
+            return null;
         }
     }
 
-    private void notifyRoundFinished() {
-        for (GameObserver gameObserver : _observers) {
-            gameObserver.onRoundFinished();
-        }
-    }
-
-    public void submitCombination(Combination combination) {
-        Round currentRound = getCurrentRound();
-        Attempt attempt = currentRound.submitCombination(combination);
-        notifyAttemptPerformed(attempt);
-        if (currentRound.isRoundOver()) {
-            /*if (isGameOver()) {
-                notifyGameFinished();
-            } else {*/
-            notifyRoundFinished();
-        }
-    }
-
-    private void notifyGameFinished() {
-        for (GameObserver gameObserver : _observers) {
-            gameObserver.onGameFinished();
-        }
-    }
-
-    public int getNbRoundsWon() {
+    public int getNbRoundsWon()
+    {
         int nbRoundsWon = 0;
 
-        for (int i = 0; i < _currentRound; i++) {
-            if (_rounds[i].getIsWon()) {
+        for (int i = 0; i < _currentRound; i++)
+        {
+            if (_rounds[i].getIsWon())
+            {
                 nbRoundsWon++;
             }
         }
@@ -87,7 +47,8 @@ public class Game {
     public boolean isGameOver()
     {
         boolean over = (_currentRound == _rounds.length && getCurrentRound().isRoundOver());
-        if(over)
+
+        if (over)
         {
             notifyGameFinished();
         }
@@ -102,5 +63,62 @@ public class Game {
     public int getRoundScore(int x)
     {
         return _rounds[x].calculateScoreRound();
+    }
+
+    public int CalculateScoreGame()
+    {
+        int score = 0;
+        for (Round round : _rounds)
+        {
+            score += round.calculateScoreRound();
+        }
+        return score;
+    }
+
+    public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
+    {
+        _rounds[_currentRound] = new Round(nbAttempts, nbColorsInCombination, gameMode);
+        _currentRound++;
+    }
+
+    public void submitCombination(Combination combination)
+    {
+        Round currentRound = getCurrentRound();
+        Attempt attempt = currentRound.submitCombination(combination);
+        notifyAttemptPerformed(attempt);
+
+        if (currentRound.isRoundOver())
+        {
+            notifyRoundFinished();
+        }
+    }
+
+    public void addObserver(GameObserver gameObserver)
+    {
+        _observers.add(gameObserver);
+    }
+
+    private void notifyAttemptPerformed(Attempt attempt)
+    {
+        for (GameObserver gameObserver : _observers)
+        {
+            gameObserver.onAttemptPerformed(attempt);
+        }
+    }
+
+    private void notifyRoundFinished()
+    {
+        for (GameObserver gameObserver : _observers)
+        {
+            gameObserver.onRoundFinished();
+        }
+    }
+
+    private void notifyGameFinished()
+    {
+        for (GameObserver gameObserver : _observers)
+        {
+            gameObserver.onGameFinished();
+        }
     }
 }
