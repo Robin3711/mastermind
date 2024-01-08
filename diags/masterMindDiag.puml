@@ -14,13 +14,24 @@ skinparam class {
 
 package views
 {
-  class MenuWindow{}
+  class MenuWindow
+  {
+    + MenuWindow(gameController : GameController) : MenuWindow
+  }
   class GameWindow implements .models.GameObserver
   {
     -_attemptIndex : Integer
     -_isNumeric : Boolean
+    + GameWindow(gameController : GameController) : GameWindow
+    + onAttemptPerformed(attempt : Attempt)
+    + onRoundFinished()
+    - resetRound()
+    + onGameFinished()
   }
-  class EndWindow{}
+  class EndWindow
+  {
+  + EndWindow(gameController : GameController) : EndWindow
+  }
 }
 
 package controllers
@@ -32,7 +43,11 @@ package controllers
     -_nbColors : Integer
     -_nbColorsInCombination : Integer
     -_nbAttempts : Integer
-  }
+    + startGame(username : String, gameMode : GameWindow, nbRounds : Integer, nbColors : Integer, nbColorsInCombination : Integer, nbAttempts : Integer)
+    + submitCombination(pawnColors : PawnColor[])
+    + nextRound()
+    - endGame()
+   }
 }
 
 package models
@@ -40,25 +55,71 @@ package models
   class Game
   {
     -_currentRound : Integer
+    + Game(nbRounds : Integer) : Game
+    + calculateScoreGame() : Integer
+    + nextRound(nbAttempts : Integer, nbColorsInCombination : Integer,gameMode : GameMode)
+    + public submitCombination(combination : Combination)
+    + addObserver(gameObserver : GameObserver)
+    - notifyAttemptPerformed(attempt : Attempt)
+    - notifyRoundFinished()
+    - notifyGameFinished()
   }
 
   class Round
   {
     -_isWon : Boolean
+    + Round(nbAttempts : Integer, nbColorsInCombination : Integer, gameMode : GameMode) : Round
+    + calculateScoreRound() : Integer
+    + submitCombination(combination : Combination) : Attempt
   }
 
-  class Attempt{}
+  class Attempt
+  {
+    + Attempt(combinationSubmitted : Combination, clues : Clue[]) : Attempt
+    + sortClues()
+  }
 
   class Combination
   {
-    _nbColorsInCombination : Integer
+    + _nbColorsInCombination : Integer
+    + Combination(int nbColorsInCombination) : Combination
   }
 
-  class Solution extends Combination{}
-  interface GameObserver{}
-  enum Clue{}
-  enum GameMode{}
-  enum PawnColor{}
+  class Solution extends Combination
+  {
+    + Solution(nbColorsInCombination : Integer) : Solution
+    + generateSolution()
+    + compareWithCombination(combination : Combination) : Clue[]
+  }
+  interface GameObserver
+  {
+    + onAttemptPerformed(attempt : Attempt)
+    + onRoundFinished()
+    + onGameFinished()
+  }
+  enum Clue
+  {
+    + WELL_PLACED
+    + MISPLACED
+    + WRONG
+  }
+  enum GameMode
+  {
+    + CLASSIC
+    + EASY
+    + NUMERIC
+  }
+  enum PawnColor
+  {
+    + RED
+    + GREEN
+    + BLUE
+    + YELLOW
+    + ORANGE
+    + PINK
+    + LIGHT_GRAY
+    + MAGENTA
+  }
 }
 
 class MasterMindApp
