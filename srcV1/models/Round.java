@@ -17,6 +17,7 @@ public class Round
 
     boolean isRoundOver()
     {
+        // un round est fini si on a atteint la derniere tentative ou si la solution a été trouvé
         return getCurrentAttemptNb() == _attempts.length || _solution.isSolutionFound(getCurrentAttempt().getClues());
     }
 
@@ -44,12 +45,13 @@ public class Round
 
     public  int calculateScoreRound()
     {
+        // le calcul du score, basé sur la dernière tentative du joueur ( donc tjrs 12 en cas de victoire )
         int[] numericClues = _attempts[getCurrentAttemptNb()-1].getNumericClues();
         int score = 0;
         score += (3*numericClues[0]);
         score+=(numericClues[1]);
 
-        if(_gameMode == GameMode.NUMERIC || _gameMode == GameMode.CLASSIC)
+        if(_gameMode == GameMode.NUMERIC || _gameMode == GameMode.CLASSIC)  // bonus si non-utilisation du mode facile
         {
             score += 4;
         }
@@ -58,11 +60,13 @@ public class Round
 
     public Attempt submitCombination(Combination combination)
     {
+        // la solution rempli le tableau d'indice en se comparant avec la combinaison
         Clue[] clues = _solution.compareWithCombination(combination);
         Attempt attempt = new Attempt(combination, clues);
 
         if (_gameMode == GameMode.CLASSIC)
         {
+            // Par défaut, le tableau est triée dans l'ordre des pions ( donc le mode facile ) il faut donc le réorganiser
             attempt.sortClues();
         }
         _attempts[getCurrentAttemptNb()] = attempt;

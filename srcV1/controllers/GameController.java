@@ -17,7 +17,8 @@ public class GameController
     private int _nbColorsInCombination;
     private int _nbAttempts;
 
-    public void startGame(String username, GameMode gameMode, int nbRounds, int nbColors, int nbColorsInCombination, int nbAttempts) {
+    public void startGame(String username, GameMode gameMode, int nbRounds, int nbColors, int nbColorsInCombination, int nbAttempts)
+    {
         this._username = username;
         this._gameMode = gameMode;
         this._nbRounds = nbRounds;
@@ -26,20 +27,12 @@ public class GameController
         this._nbAttempts = nbAttempts;
         this._game = new Game(nbRounds);
 
-        // Crée la vue du jeu
+        // Crée la vue du jeu et mise en place de l'observeur
         GameWindow gameWindow = new GameWindow(this);
-
         _game.addObserver(gameWindow);
 
+        // lance le tour 1
         nextRound();
-
-        // Affiche les paramètres de la partie
-        System.out.println("Username: " + this._username);
-        System.out.println("Game mode: " + this._gameMode);
-        System.out.println("Number of rounds: " + this._nbRounds);
-        System.out.println("Number of colors: " + this._nbColors);
-        System.out.println("Number of colors in the solution: " + this._nbColorsInCombination);
-        System.out.println("Number of attempts: " + this._nbAttempts);
     }
 
     // getters
@@ -72,7 +65,13 @@ public class GameController
         return _nbAttempts;
     }
 
-    public void submitCombination(PawnColor[] pawnColors) {
+    public int getNbRoundsWon()
+    {
+        return _game.getNbRoundsWon();
+    }
+
+    public void submitCombination(PawnColor[] pawnColors)
+    {
         Combination combination = new Combination(_nbColorsInCombination);
         combination.setPawns(pawnColors);
         _game.submitCombination(combination);
@@ -80,31 +79,20 @@ public class GameController
 
     public void nextRound()
     {
-        System.out.println("nextround");
+        // le controlleur est chargé de verifier si le jeu est fini
         if(_game.isGameOver())
         {
-            System.out.println("isGameOver == true");
-            // game notify round over
             endGame();
         }
         else
         {
             _game.nextRound(_nbAttempts, _nbColorsInCombination, _gameMode);
-            System.out.println("isGameOver == false");
         }
-
-    }
-    // calcul du score; peut etre a faire dans une class a part
-    public int getNbRoundsWon()
-    {
-        return _game.getNbRoundsWon();
     }
 
     private void endGame()
     {
-
-        EndWindow endWindow = new EndWindow(this);
+        // créer le menu de fin
+        new EndWindow(this);
     }
-
-
 }

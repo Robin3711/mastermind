@@ -18,6 +18,7 @@ public class Combination {
     {
         // Verify that the number of pawns is correct
         if (pawns.length != getNbColorsInCombination())
+        if (pawns.length != getNbColorsInCombination())
         {
             return;
         }

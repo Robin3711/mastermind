@@ -11,7 +11,6 @@ public class Attempt {
         _combinationSubmitted = combinationSubmitted;
         _clues = clues;
     }
-
     public Combination getCombinationSubmitted() {
         return _combinationSubmitted;
     }

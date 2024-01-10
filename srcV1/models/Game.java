@@ -77,14 +77,21 @@ public class Game
 
     public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
     {
+        // crée un nouveau round quand le controlleur lui dit
         _rounds[_currentRound] = new Round(nbAttempts, nbColorsInCombination, gameMode);
         _currentRound++;
     }
 
     public void submitCombination(Combination combination)
     {
+        // transmet la combinaison au round.
+        // a cause de cette méthode le jeu doit interagire avec combinaison,
+        // mais sans cela nous ne pouvions pas lui faire prévenir ses observeurs de la fin du round
+        // cela aurait pu etre evité avec un roundObserver, mais nous ne voulions pas surchargé le projet avec plusieurs types d'observeurs
+
         Round currentRound = getCurrentRound();
         Attempt attempt = currentRound.submitCombination(combination);
+
         notifyAttemptPerformed(attempt);
 
         if (currentRound.isRoundOver())
@@ -93,6 +100,7 @@ public class Game
         }
     }
 
+    // fonctions relatives aux observeurs
     public void addObserver(GameObserver gameObserver)
     {
         _observers.add(gameObserver);

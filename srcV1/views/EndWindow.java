@@ -88,7 +88,7 @@ public class EndWindow extends JFrame
 
         for(int i = 0; i < scorePanelComponent.length; i=i+3)
         {
-            scorePanelLabel[i].setText("round " + (i/3));
+            scorePanelLabel[i].setText("round " + ((i/3)+1));
             scorePanelLabel[i+1].setText(gameController.getGame().getIsRoundWon(i/3) ? "gagné" :"perdu");
             scorePanelLabel[i+2].setText(String.valueOf(gameController.getGame().getRoundScore(i/3)));
         }

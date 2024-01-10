@@ -305,7 +305,7 @@ public class GameWindow extends JFrame implements GameObserver {
         if (_gameController.getGameMode() == GameMode.NUMERIC) {
             // Display numeric clues
             for (int i = 0; i < Clue.values().length; i++) {
-                int numericClue = attempt.getNumericClues()[i];
+                int numericClue = attempt.  getNumericClues()[i];
                 // Display numeric clues in the JLabels
                 cluesPanelLabels[i].setText(Integer.toString(numericClue));
             }
