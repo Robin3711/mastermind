@@ -15,7 +15,7 @@ public class GameWindow extends JFrame implements GameObserver {
         put(PawnColor.GREEN, Color.GREEN);
         put(PawnColor.BLUE, Color.BLUE);
         put(PawnColor.YELLOW, Color.YELLOW);
-        put(PawnColor.ORANGE, Color.ORANGE);
+        put(PawnColor.CYAN, Color.CYAN);
         put(PawnColor.PINK, Color.PINK);
         put(PawnColor.LIGHT_GRAY, Color.LIGHT_GRAY);
         put(PawnColor.MAGENTA, Color.MAGENTA);
@@ -107,11 +107,11 @@ public class GameWindow extends JFrame implements GameObserver {
             gameController.submitCombination(pawnColors);
         });
 
-        buttonsPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLUE));
-        _cluesPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.RED));
-        _combinationPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.GREEN));
-        colorsPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.PINK));
-        _boardPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK));
+        /*buttonsPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+        _cluesPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+        _combinationPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+        colorsPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+        _boardPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));*/
 
         // I'd like a 9x9 grid so that each cell is 100x100
         // I'd like boardPanel to be top right and 600x600
@@ -150,28 +150,6 @@ public class GameWindow extends JFrame implements GameObserver {
         gbc.weighty = 0;
         this.add(buttonsPanel, gbc);
 
-        // Assurez-vous que la largeur maximale des boutons est égale à la largeur du panel
-        //forfeitRoundButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, forfeitRoundButton.getMinimumSize().height));
-        //forfeitGameButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, forfeitGameButton.getMinimumSize().height));
-        //resetButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, resetButton.getMinimumSize().height));
-        //submitButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, submitButton.getMinimumSize().height));
-
-        //forfeitRoundButton.setAlignmentX(CENTER_ALIGNMENT);
-        //forfeitGameButton.setAlignmentX(CENTER_ALIGNMENT);
-        //resetButton.setAlignmentX(CENTER_ALIGNMENT);
-        //submitButton.setAlignmentX(CENTER_ALIGNMENT);
-
-        // Ajoutez un peu d'espace vertical entre les boutons
-        //buttonsPanel.add(Box.createVerticalGlue());
-
-        //buttonsPanel.add(forfeitRoundButton);
-        //buttonsPanel.add(forfeitGameButton);
-        //buttonsPanel.add(resetButton);
-        //buttonsPanel.add(submitButton);
-
-        // Ajoutez un autre espace vertical pour pousser les boutons vers le haut
-        //buttonsPanel.add(Box.createVerticalGlue());
-
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2; // S'étend sur les deux colonnes sous le boardPanel
@@ -187,11 +165,11 @@ public class GameWindow extends JFrame implements GameObserver {
         gbc.weightx = 0.6;
         gbc.weighty = 0.1;
         this.add(colorsPanel, gbc);
-
-        buttonsPanel.add(forfeitRoundButton);
-        buttonsPanel.add(forfeitGameButton);
-        buttonsPanel.add(resetButton);
-        buttonsPanel.add(submitButton);
+        buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        buttonsPanel.add(forfeitRoundButton,CENTER_ALIGNMENT);
+        buttonsPanel.add(forfeitGameButton,CENTER_ALIGNMENT);
+        buttonsPanel.add(resetButton,CENTER_ALIGNMENT);
+        buttonsPanel.add(submitButton,CENTER_ALIGNMENT);
 
         // Remplis boardPanel avec des JLabels
         for (int i = 0; i < gameController.getNbAttempts(); i++) {
@@ -317,10 +295,10 @@ public class GameWindow extends JFrame implements GameObserver {
                         cluesPanelLabels[i].setBackground(Color.RED);
                         break;
                     case MISPLACED:
-                        cluesPanelLabels[i].setBackground(Color.BLUE);
+                        cluesPanelLabels[i].setBackground(Color.GRAY);
                         break;
                     case WRONG:
-                        cluesPanelLabels[i].setBackground(Color.GREEN);
+                        cluesPanelLabels[i].setBackground(Color.WHITE);
                         break;
                 }
             }

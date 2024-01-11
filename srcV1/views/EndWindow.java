@@ -29,7 +29,7 @@ public class EndWindow extends JFrame
 
         String endMessage = "vous avez gagné " + gameController.getNbRoundsWon() + "round(s) sur " + gameController.getNbRounds() + ". votre score final est de "+ gameController.getGame().CalculateScoreGame();
         _mainPanel.add(new Label(endMessage));
-        _mainPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLUE));
+        _mainPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;
@@ -54,7 +54,7 @@ public class EndWindow extends JFrame
 
         _buttonsPanel.add(closeAppButton);
         _buttonsPanel.add(restartGameButton);
-        _buttonsPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.RED));
+        _buttonsPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -93,7 +93,7 @@ public class EndWindow extends JFrame
             scorePanelLabel[i+2].setText(String.valueOf(gameController.getGame().getRoundScore(i/3)));
         }
 
-        _scorePanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.GREEN));
+        _scorePanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
         gbc.gridx = 1;
         gbc.gridy = 1;
         add(_scorePanel, gbc);

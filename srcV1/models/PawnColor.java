@@ -5,7 +5,7 @@ public enum PawnColor {
     GREEN,
     BLUE,
     YELLOW,
-    ORANGE,
+    CYAN,
     PINK,
     LIGHT_GRAY,
     MAGENTA

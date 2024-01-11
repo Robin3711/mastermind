@@ -69,6 +69,7 @@ public class Round
             // Par défaut, le tableau est triée dans l'ordre des pions ( donc le mode facile ) il faut donc le réorganiser
             attempt.sortClues();
         }
+
         _attempts[getCurrentAttemptNb()] = attempt;
 
         if (_solution.isSolutionFound(clues))

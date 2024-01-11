@@ -133,7 +133,7 @@ Game ..> Combination : > <<uses>>
 
 Round *--> "1 \n -_solution" Solution : > <<owns>>
 Round *-d-> "10..12 \n -_attempts" Attempt : > <<owns>>
-Round *--> "1 \n -_gamemod" GameMode : > <<owns>> <!-- Adjusted layout here -->
+Round *--> "1 \n -_gamemod" GameMode : > <<owns>> !
 Round ..> Combination : > <<uses>>
 Round ..> Clue : > <<uses>>
 
