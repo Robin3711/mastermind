@@ -39,6 +39,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
         JButton forfeitRoundButton = new JButton("Forfeit round");
         forfeitRoundButton.addActionListener(e -> {
+            _gameController.forfeitCurrendRound();
             onRoundFinished();
         });
 

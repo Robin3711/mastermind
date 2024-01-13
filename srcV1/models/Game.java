@@ -77,6 +77,7 @@ public class Game
 
     public void nextRound(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
     {
+        System.out.println("ROUND : "+_currentRound);
         // crée un nouveau round quand le controlleur lui dit
         _rounds[_currentRound] = new Round(nbAttempts, nbColorsInCombination, gameMode);
         _currentRound++;

@@ -95,4 +95,9 @@ public class GameController
         // créer le menu de fin
         new EndWindow(this);
     }
+
+    public void forfeitCurrendRound()
+    {
+        this._game.getCurrentRound()._forfeited = true;
+    }
 }

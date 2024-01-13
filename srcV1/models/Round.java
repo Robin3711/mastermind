@@ -8,6 +8,8 @@ public class Round
     private Attempt[] _attempts;
     private boolean _isWon = false;
 
+    public boolean _forfeited = false;
+
     public Round(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
     {
         _gameMode = gameMode;
@@ -17,13 +19,21 @@ public class Round
 
     boolean isRoundOver()
     {
+        if(getCurrentAttempt() == null)
+        {
+            return true;
+        }
         // un round est fini si on a atteint la derniere tentative ou si la solution a été trouvé
-        return getCurrentAttemptNb() == _attempts.length || _solution.isSolutionFound(getCurrentAttempt().getClues());
+        return getCurrentAttemptNb() == _attempts.length || _solution.isSolutionFound(getCurrentAttempt().getClues()) || _forfeited ;
     }
 
     public Attempt getCurrentAttempt()
     {
-        return _attempts[getCurrentAttemptNb() - 1];
+        if(getCurrentAttemptNb()!= 0)
+        {
+            return _attempts[getCurrentAttemptNb() - 1];
+        }
+        return null;
     }
 
     public int getCurrentAttemptNb()
@@ -45,6 +55,10 @@ public class Round
 
     public  int calculateScoreRound()
     {
+        if(getCurrentAttempt() == null)
+        {
+            return 0;
+        }
         // le calcul du score, basé sur la dernière tentative du joueur ( donc tjrs 12 en cas de victoire )
         int[] numericClues = _attempts[getCurrentAttemptNb()-1].getNumericClues();
         int score = 0;
