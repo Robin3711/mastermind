@@ -3,6 +3,7 @@
 # Variables
 SRC = .
 MODELS = ./models
+CONTROLLERS = ./controllers
 VIEWS = ./views
 
 # Règles
@@ -13,6 +14,8 @@ clean:
 	@find $(SRC) -name "*.class" -type f -delete
 	@echo "Suppression des fichiers .class dans $(MODELS)"
 	@find $(MODELS) -name "*.class" -type f -delete
+	@echo "Suppression des fichiers .class dans $(CONTROLLERS)"
+	@find $(CONTROLLERS) -name "*.class" -type f -delete
 	@echo "Suppression des fichiers .class dans $(VIEWS)"
 	@find $(VIEWS) -name "*.class" -type f -delete
 
@@ -21,6 +24,8 @@ compile:
 	@javac $(SRC)/*.java
 	@echo "Compilation des fichiers .java dans $(MODELS)"
 	@javac $(MODELS)/*.java
+	@echo "Compilation des fichiers .java dans $(CONTROLLERS)"
+	@javac $(CONTROLLERS)/*.java
 	@echo "Compilation des fichiers .java dans $(VIEWS)"
 	@javac $(VIEWS)/*.java
 
