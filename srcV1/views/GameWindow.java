@@ -1,15 +1,34 @@
 package views;
 
 import controllers.GameController;
-import models.*;
+import models.GameObserver;
+import models.PawnColor;
+import models.Attempt;
+import models.Clue;
+import models.GameMode;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the game window of the MasterMind game.
+ */
 public class GameWindow extends JFrame implements GameObserver {
-    // dictionary mapping PawnColor to Color
+    // Dictionary mapping PawnColor to Color
     Map<PawnColor, Color> _pawnColorToColor = new HashMap<>() {{
         put(PawnColor.RED, Color.RED);
         put(PawnColor.GREEN, Color.GREEN);
@@ -26,8 +45,12 @@ public class GameWindow extends JFrame implements GameObserver {
     int _attemptIndex = 1;
     private final GameController _gameController;
 
-    boolean _isNumeric = false; // utilisé au moment de crée les Jlabel
+    boolean _isNumeric = false; // true if game mode is numeric
 
+    /**
+     * Constructor for the GameWindow class.
+     * @param gameController The GameController associated with the game.
+     */
     public GameWindow(GameController gameController) {
         super("Game");
         setSize(900, 900);
@@ -39,7 +62,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
         JButton forfeitRoundButton = new JButton("Forfeit round");
         forfeitRoundButton.addActionListener(e -> {
-            _gameController.forfeitCurrendRound();
+            _gameController.forfeitCurrentRound();
             onRoundFinished();
         });
 
@@ -62,10 +85,6 @@ public class GameWindow extends JFrame implements GameObserver {
         // gamePanel has nbAttempts rows and nbColorsInSolution columns, stocker infos dans variables ppour réutiliser
         _boardPanel.setLayout(new GridLayout(gameController.getNbAttempts(), gameController.getNbColorsInCombination()));
 
-        // next to each line of boardPanel are the indices corresponding to the line stored in cluesPanel
-        // clues can be in the form of dots of different colors or numbers
-
-
         if(gameController.getGameMode() == GameMode.NUMERIC)
         {
             _cluesPanel.setLayout(new GridLayout(gameController.getNbAttempts(), 3));
@@ -77,9 +96,6 @@ public class GameWindow extends JFrame implements GameObserver {
             _isNumeric = false;
         }
 
-
-        //JPanel combinationPanel = new JPanel();
-        // combinationPanel has 1 row and nbColorsInSolution columns
         _combinationPanel.setLayout(new GridLayout(1, gameController.getNbColorsInCombination()));
 
         resetButton.addActionListener(e -> {
@@ -108,61 +124,48 @@ public class GameWindow extends JFrame implements GameObserver {
             gameController.submitCombination(pawnColors);
         });
 
-        /*buttonsPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
-        _cluesPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
-        _combinationPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
-        colorsPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
-        _boardPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));*/
-
-        // I'd like a 9x9 grid so that each cell is 100x100
-        // I'd like boardPanel to be top right and 600x600
-        // I'd like cluesPanel to be to the right of boardPanel and 600x100.
-        // I'd like combinationPanel to be below boardPanel and 200x600.
-        // I'd like colorsPanel to be below combinationPanel and 100x600.
-        // I'd like buttonsPanel to be to the right of cluesPanel and 900x200.
-
         GridBagConstraints gbc = new GridBagConstraints();
         this.setLayout(new GridBagLayout());
 
-        // Paramètres communs pour tous les composants
+        // Common parameters for all the components
         gbc.fill = GridBagConstraints.BOTH;
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2; // Prend deux colonnes
-        gbc.gridheight = 3; // Prend trois rangées
+        gbc.gridwidth = 2; // Fit two columns
+        gbc.gridheight = 3; // Fit three rows
         gbc.weightx = 0.6;
         gbc.weighty = 0.7;
         this.add(_boardPanel, gbc);
 
         gbc.gridx = 2;
         gbc.gridy = 0;
-        gbc.gridwidth = 1; // Prend une colonne
-        gbc.gridheight = 3; // Augmente la hauteur pour être égal à boardPanel
+        gbc.gridwidth = 1;
+        gbc.gridheight = 3;
         gbc.weightx = 0.2;
         gbc.weighty = 0.7;
         this.add(_cluesPanel, gbc);
 
         gbc.gridx = 3;
         gbc.gridy = 0;
-        gbc.gridwidth = 1; // Prend une colonne
-        gbc.gridheight = 4; // S'étend sur toute la hauteur de la fenêtre
+        gbc.gridwidth = 1;
+        gbc.gridheight = 4;
         gbc.weightx = 0.2;
         gbc.weighty = 0;
         this.add(buttonsPanel, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        gbc.gridwidth = 2; // S'étend sur les deux colonnes sous le boardPanel
-        gbc.gridheight = 1; // Prend une rangée
+        gbc.gridwidth = 2;
+        gbc.gridheight = 1;
         gbc.weightx = 0.6;
         gbc.weighty = 0.2;
         this.add(_combinationPanel, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        gbc.gridwidth = 2; // S'étend sur les deux colonnes sous le combinationPanel
-        gbc.gridheight = 1; // Prend une rangée
+        gbc.gridwidth = 2;
+        gbc.gridheight = 1;
         gbc.weightx = 0.6;
         gbc.weighty = 0.1;
         this.add(colorsPanel, gbc);
@@ -172,7 +175,7 @@ public class GameWindow extends JFrame implements GameObserver {
         buttonsPanel.add(resetButton,CENTER_ALIGNMENT);
         buttonsPanel.add(submitButton,CENTER_ALIGNMENT);
 
-        // Remplis boardPanel avec des JLabels
+        // Fill boardPanel with JLabels
         for (int i = 0; i < gameController.getNbAttempts(); i++) {
             for (int j = 0; j < gameController.getNbColorsInCombination(); j++)
             {
@@ -185,7 +188,7 @@ public class GameWindow extends JFrame implements GameObserver {
             }
         }
 
-        // Remplis combinationPanel avec des JButton
+        // Fill combinationPanel with JButtons
         for (int i = 0; i < gameController.getNbColorsInCombination(); i++) {
             JButton button = new JButton();
             button.setOpaque(true);
@@ -220,7 +223,7 @@ public class GameWindow extends JFrame implements GameObserver {
             _combinationPanel.add(button);
         }
 
-        // Remplis colorsPanel avec des JButton
+        // Fill colorsPanel with JButtons
         for (PawnColor pawnColor : _pawnColorToColor.keySet()) {
             JButton button = new JButton();
             button.setOpaque(true);
@@ -231,7 +234,7 @@ public class GameWindow extends JFrame implements GameObserver {
             colorsPanel.add(button);
         }
 
-        // Remplis cluesPanel avec des JLabels
+        // Fill cluesPanel with JLabels
         for (int i = 0; i < gameController.getNbAttempts(); i++) {
             for (int j = 0; j < (_isNumeric ? 3 : gameController.getNbColorsInCombination()); j++) {
 
@@ -247,6 +250,10 @@ public class GameWindow extends JFrame implements GameObserver {
         setVisible(true);
     }
 
+    /**
+     * Updates the view when an attempt is performed.
+     * @param attempt The attempt that was performed.
+     */
     @Override
     public void onAttemptPerformed(Attempt attempt) {
         // Get the JLabels of the actual row of boardPanel
@@ -275,21 +282,15 @@ public class GameWindow extends JFrame implements GameObserver {
             cluesPanelLabels[i] = (JLabel) cluesPanelComponents[cluesPanelComponents.length - cluesPanelLabels.length * _attemptIndex + i];
         }
 
-        // Attempt has a getClues method which returns an array of Clue
-        // Clue is an enum with 3 values: WELL_PLACED, MISPLACED, WRONG
-        // If the value is WELL_PLACED, the JLabel should contain a red dot
-        // If the value is MISPLACED, the JLabel should contain a blue dot
-        // If the value is WRONG, the JLabel should contain a green dot
-
         if (_gameController.getGameMode() == GameMode.NUMERIC) {
             // Display numeric clues
             for (int i = 0; i < Clue.values().length; i++) {
-                int numericClue = attempt.  getNumericClues()[i];
+                int numericClue = attempt.getNumericClues()[i];
                 // Display numeric clues in the JLabels
                 cluesPanelLabels[i].setText(Integer.toString(numericClue));
             }
         } else {
-            // Display colored dots
+            // Display colored clues
             for (int i = 0; i < _gameController.getNbColorsInCombination(); i++) {
                 switch (attempt.getClues()[i]) {
                     case WELL_PLACED:
@@ -308,16 +309,20 @@ public class GameWindow extends JFrame implements GameObserver {
         _attemptIndex++;
     }
 
-
+    /**
+     * Updates the view when a round is finished.
+     */
     @Override
     public void onRoundFinished() {
         System.out.println("roundFini");
-        // Display a message to the user
         JOptionPane.showMessageDialog(this, "Round finished");
         // When the user clicks OK, the round should be reset
         resetRound();
     }
 
+    /**
+     * Resets the round.
+     */
     private void resetRound() {
         System.out.println("resetRound");
         // Reset the attempt index
@@ -341,13 +346,11 @@ public class GameWindow extends JFrame implements GameObserver {
         _gameController.nextRound();
     }
 
+    /**
+     * Updates the view when the game is finished.
+     */
     @Override
     public void onGameFinished() {
-        // Display a message to the user
-        //JOptionPane.showMessageDialog(this, "Game finished");
-
-        // When the user clicks OK, the game should be disposed and the menu window should be displayed
-        //new MenuWindow(_gameController);
         dispose();
     }
 }

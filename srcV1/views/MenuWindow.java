@@ -3,11 +3,29 @@ package views;
 import controllers.GameController;
 import models.GameMode;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.JSlider;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JComponent;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Represents the menu window for configuring the MasterMind game.
+ */
 public class MenuWindow extends JFrame {
+
+    /**
+     * Constructor for the MenuWindow class.
+     * @param gameController The GameController associated with the game.
+     */
     public MenuWindow(GameController gameController) {
         super("Menu");
         setSize(400, 500);
@@ -37,7 +55,6 @@ public class MenuWindow extends JFrame {
             int nbAttempts = nbAttemptsSlider.getValue();
             gameController.startGame(username, gameMode, nbRounds, nbColors, nbColorsInCombination, nbAttempts);
             dispose();
-
         });
 
         contentPane.add(createLabeledComponent("Username", usernameTextField));
@@ -66,6 +83,12 @@ public class MenuWindow extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Creates a labeled component.
+     * @param label The label for the component.
+     * @param component The component.
+     * @return The labeled component.
+     */
     private JPanel createLabeledComponent(String label, JComponent component) {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -75,6 +98,13 @@ public class MenuWindow extends JFrame {
         return panel;
     }
 
+    /**
+     * Creates a slider.
+     * @param min The minimum value for the slider.
+     * @param max The maximum value for the slider.
+     * @param initialValue The initial value for the slider.
+     * @return The slider.
+     */
     private JSlider createSlider(int min, int max, int initialValue) {
         JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, initialValue);
         slider.setMajorTickSpacing(1);

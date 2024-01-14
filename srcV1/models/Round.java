@@ -1,15 +1,22 @@
 package models;
 
+/**
+ * Represents a round in the MasterMind game.
+ */
 public class Round
 {
-
     private final GameMode _gameMode;
     private final Solution _solution;
     private Attempt[] _attempts;
     private boolean _isWon = false;
-
     public boolean _forfeited = false;
 
+    /**
+     * Constructor for the Round class.
+     * @param nbAttempts The number of attempts allowed in the round.
+     * @param nbColorsInCombination The number of colors in the combination for the round.
+     * @param gameMode The game mode for the round.
+     */
     public Round(int nbAttempts, int nbColorsInCombination, GameMode gameMode)
     {
         _gameMode = gameMode;
@@ -17,16 +24,24 @@ public class Round
         _attempts = new Attempt[nbAttempts];
     }
 
+    /**
+     * Checks if the round is over.
+     * @return True if the round is over, false otherwise.
+     */
     boolean isRoundOver()
     {
         if(getCurrentAttempt() == null)
         {
             return true;
         }
-        // un round est fini si on a atteint la derniere tentative ou si la solution a été trouvé
+        // A round is over if we have reached the last attempt or if the solution has been found.
         return getCurrentAttemptNb() == _attempts.length || _solution.isSolutionFound(getCurrentAttempt().getClues()) || _forfeited ;
     }
 
+    /**
+     * Gets the current attempt in the round.
+     * @return The current attempt or null if no attempts have been made.
+     */
     public Attempt getCurrentAttempt()
     {
         if(getCurrentAttemptNb()!= 0)
@@ -36,6 +51,10 @@ public class Round
         return null;
     }
 
+    /**
+     * Gets the number of the current attempt in the round.
+     * @return The number of the current attempt.
+     */
     public int getCurrentAttemptNb()
     {
         for (int i = 0; i < _attempts.length; i++)
@@ -48,39 +67,51 @@ public class Round
         return _attempts.length;
     }
 
+    /**
+     * Gets whether the round is won.
+     * @return True if the round is won, false otherwise.
+     */
     public boolean getIsWon()
     {
         return _isWon;
     }
 
-    public  int calculateScoreRound()
+    /**
+     * Calculates the score for the round.
+     * @return The score for the round.
+     */
+    public int calculateScoreRound()
     {
         if(getCurrentAttempt() == null)
         {
             return 0;
         }
-        // le calcul du score, basé sur la dernière tentative du joueur ( donc tjrs 12 en cas de victoire )
+        // Score calculation based on the player's last attempt
         int[] numericClues = _attempts[getCurrentAttemptNb()-1].getNumericClues();
         int score = 0;
         score += (3*numericClues[0]);
         score+=(numericClues[1]);
 
-        if(_gameMode == GameMode.NUMERIC || _gameMode == GameMode.CLASSIC)  // bonus si non-utilisation du mode facile
+        if(_gameMode == GameMode.NUMERIC || _gameMode == GameMode.CLASSIC)  // Bonus if not using easy mode
         {
             score += 4;
         }
         return score;
     }
 
+    /**
+     * Submits a combination to the round.
+     * @param combination The combination to be submitted.
+     * @return The attempt made in the round.
+     */
     public Attempt submitCombination(Combination combination)
     {
-        // la solution rempli le tableau d'indice en se comparant avec la combinaison
         Clue[] clues = _solution.compareWithCombination(combination);
         Attempt attempt = new Attempt(combination, clues);
 
         if (_gameMode == GameMode.CLASSIC)
         {
-            // Par défaut, le tableau est triée dans l'ordre des pions ( donc le mode facile ) il faut donc le réorganiser
+            // By default, the array is sorted in the order of pawns (easy mode) so it needs to be rearranged
             attempt.sortClues();
         }
 
