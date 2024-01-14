@@ -15,7 +15,7 @@ public class GameWindow extends JFrame implements GameObserver {
         put(PawnColor.GREEN, Color.GREEN);
         put(PawnColor.BLUE, Color.BLUE);
         put(PawnColor.YELLOW, Color.YELLOW);
-        put(PawnColor.ORANGE, Color.ORANGE);
+        put(PawnColor.CYAN, Color.CYAN);
         put(PawnColor.PINK, Color.PINK);
         put(PawnColor.LIGHT_GRAY, Color.LIGHT_GRAY);
         put(PawnColor.MAGENTA, Color.MAGENTA);
@@ -25,6 +25,8 @@ public class GameWindow extends JFrame implements GameObserver {
     JPanel _cluesPanel = new JPanel();
     int _attemptIndex = 1;
     private final GameController _gameController;
+
+    boolean _isNumeric = false; // utilisé au moment de crée les Jlabel
 
     public GameWindow(GameController gameController) {
         super("Game");
@@ -37,6 +39,7 @@ public class GameWindow extends JFrame implements GameObserver {
 
         JButton forfeitRoundButton = new JButton("Forfeit round");
         forfeitRoundButton.addActionListener(e -> {
+            _gameController.forfeitCurrendRound();
             onRoundFinished();
         });
 
@@ -57,15 +60,27 @@ public class GameWindow extends JFrame implements GameObserver {
         colorsPanel.setLayout(new FlowLayout());
 
         // gamePanel has nbAttempts rows and nbColorsInSolution columns, stocker infos dans variables ppour réutiliser
-        _boardPanel.setLayout(new GridLayout(10, 4));
+        _boardPanel.setLayout(new GridLayout(gameController.getNbAttempts(), gameController.getNbColorsInCombination()));
 
         // next to each line of boardPanel are the indices corresponding to the line stored in cluesPanel
         // clues can be in the form of dots of different colors or numbers
-        _cluesPanel.setLayout(new GridLayout(10, 4));
+
+
+        if(gameController.getGameMode() == GameMode.NUMERIC)
+        {
+            _cluesPanel.setLayout(new GridLayout(gameController.getNbAttempts(), 3));
+            _isNumeric = true;
+        }
+        else
+        {
+            _cluesPanel.setLayout(new GridLayout(gameController.getNbAttempts(), gameController.getNbColorsInCombination()));
+            _isNumeric = false;
+        }
+
 
         //JPanel combinationPanel = new JPanel();
         // combinationPanel has 1 row and nbColorsInSolution columns
-        _combinationPanel.setLayout(new GridLayout(1, 4));
+        _combinationPanel.setLayout(new GridLayout(1, gameController.getNbColorsInCombination()));
 
         resetButton.addActionListener(e -> {
             // Remove the colors of the combinationPanel
@@ -78,9 +93,8 @@ public class GameWindow extends JFrame implements GameObserver {
 
         submitButton.addActionListener(e -> {
             // Create a PawnColor array
-            PawnColor[] pawnColors = new PawnColor[4];
-            for (int i = 0; i < 4; i++) {
-                System.out.println("Prout");
+            PawnColor[] pawnColors = new PawnColor[gameController.getNbColorsInCombination()];
+            for (int i = 0; i < pawnColors.length; i++) {
                 // If the button has no text, it means that the user didn't choose a color for this pawn
                 if (((JButton) _combinationPanel.getComponent(i)).getText().equals("")) {
                     JOptionPane.showMessageDialog(this, "You must choose a color for each pawn.");
@@ -94,11 +108,11 @@ public class GameWindow extends JFrame implements GameObserver {
             gameController.submitCombination(pawnColors);
         });
 
-        buttonsPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLUE));
-        _cluesPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.RED));
-        _combinationPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.GREEN));
-        colorsPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.PINK));
-        _boardPanel.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5, Color.BLACK));
+        /*buttonsPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+        _cluesPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+        _combinationPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+        colorsPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+        _boardPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));*/
 
         // I'd like a 9x9 grid so that each cell is 100x100
         // I'd like boardPanel to be top right and 600x600
@@ -137,28 +151,6 @@ public class GameWindow extends JFrame implements GameObserver {
         gbc.weighty = 0;
         this.add(buttonsPanel, gbc);
 
-        // Assurez-vous que la largeur maximale des boutons est égale à la largeur du panel
-        //forfeitRoundButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, forfeitRoundButton.getMinimumSize().height));
-        //forfeitGameButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, forfeitGameButton.getMinimumSize().height));
-        //resetButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, resetButton.getMinimumSize().height));
-        //submitButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, submitButton.getMinimumSize().height));
-
-        //forfeitRoundButton.setAlignmentX(CENTER_ALIGNMENT);
-        //forfeitGameButton.setAlignmentX(CENTER_ALIGNMENT);
-        //resetButton.setAlignmentX(CENTER_ALIGNMENT);
-        //submitButton.setAlignmentX(CENTER_ALIGNMENT);
-
-        // Ajoutez un peu d'espace vertical entre les boutons
-        //buttonsPanel.add(Box.createVerticalGlue());
-
-        //buttonsPanel.add(forfeitRoundButton);
-        //buttonsPanel.add(forfeitGameButton);
-        //buttonsPanel.add(resetButton);
-        //buttonsPanel.add(submitButton);
-
-        // Ajoutez un autre espace vertical pour pousser les boutons vers le haut
-        //buttonsPanel.add(Box.createVerticalGlue());
-
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2; // S'étend sur les deux colonnes sous le boardPanel
@@ -174,16 +166,16 @@ public class GameWindow extends JFrame implements GameObserver {
         gbc.weightx = 0.6;
         gbc.weighty = 0.1;
         this.add(colorsPanel, gbc);
-
-        buttonsPanel.add(forfeitRoundButton);
-        buttonsPanel.add(forfeitGameButton);
-        buttonsPanel.add(resetButton);
-        buttonsPanel.add(submitButton);
+        buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        buttonsPanel.add(forfeitRoundButton,CENTER_ALIGNMENT);
+        buttonsPanel.add(forfeitGameButton,CENTER_ALIGNMENT);
+        buttonsPanel.add(resetButton,CENTER_ALIGNMENT);
+        buttonsPanel.add(submitButton,CENTER_ALIGNMENT);
 
         // Remplis boardPanel avec des JLabels
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 4; j++) {
-
+        for (int i = 0; i < gameController.getNbAttempts(); i++) {
+            for (int j = 0; j < gameController.getNbColorsInCombination(); j++)
+            {
                 JLabel label = new JLabel();
                 label.setOpaque(true);
                 label.setBackground(Color.WHITE);
@@ -194,7 +186,7 @@ public class GameWindow extends JFrame implements GameObserver {
         }
 
         // Remplis combinationPanel avec des JButton
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < gameController.getNbColorsInCombination(); i++) {
             JButton button = new JButton();
             button.setOpaque(true);
             button.setBackground(Color.WHITE);
@@ -240,8 +232,8 @@ public class GameWindow extends JFrame implements GameObserver {
         }
 
         // Remplis cluesPanel avec des JLabels
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < gameController.getNbAttempts(); i++) {
+            for (int j = 0; j < (_isNumeric ? 3 : gameController.getNbColorsInCombination()); j++) {
 
                 JLabel label = new JLabel();
                 label.setOpaque(true);
@@ -259,15 +251,14 @@ public class GameWindow extends JFrame implements GameObserver {
     public void onAttemptPerformed(Attempt attempt) {
         // Get the JLabels of the actual row of boardPanel
         Component[] boardPanelComponents = _boardPanel.getComponents();
-        JLabel[] boardPanelLabels = new JLabel[4];
-        for (int i = 0; i < 4; i++) {
-            boardPanelLabels[i] = (JLabel) boardPanelComponents[boardPanelComponents.length - 4 * _attemptIndex + i];
+        JLabel[] boardPanelLabels = new JLabel[_gameController.getNbColorsInCombination()];
+        for (int i = 0; i < boardPanelLabels.length; i++) {
+            boardPanelLabels[i] = (JLabel) boardPanelComponents[boardPanelComponents.length - boardPanelLabels.length * _attemptIndex + i];
         }
 
         // Set the background color of the JLabels to the background color of the buttons of the combinationPanel
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < boardPanelLabels.length; i++) {
             boardPanelLabels[i].setBackground(_combinationPanel.getComponent(i).getBackground());
-            System.out.println(_combinationPanel.getComponent(i).getBackground());
         }
 
         // Remove the colors of the combinationPanel
@@ -279,9 +270,9 @@ public class GameWindow extends JFrame implements GameObserver {
 
         // Get the JLabels of the actual row of cluesPanel
         Component[] cluesPanelComponents = _cluesPanel.getComponents();
-        JLabel[] cluesPanelLabels = new JLabel[4];
-        for (int i = 0; i < 4; i++) {
-            cluesPanelLabels[i] = (JLabel) cluesPanelComponents[cluesPanelComponents.length - 4 * _attemptIndex + i];
+        JLabel[] cluesPanelLabels = new JLabel[(_isNumeric ? 3 : _gameController.getNbColorsInCombination())];
+        for (int i = 0; i < cluesPanelLabels.length; i++) {
+            cluesPanelLabels[i] = (JLabel) cluesPanelComponents[cluesPanelComponents.length - cluesPanelLabels.length * _attemptIndex + i];
         }
 
         // Attempt has a getClues method which returns an array of Clue
@@ -289,28 +280,38 @@ public class GameWindow extends JFrame implements GameObserver {
         // If the value is WELL_PLACED, the JLabel should contain a red dot
         // If the value is MISPLACED, the JLabel should contain a blue dot
         // If the value is WRONG, the JLabel should contain a green dot
-        for (int i = 0; i < 4; i++) {
-            switch (attempt.getClues()[i]) {
-                case WELL_PLACED:
-                    cluesPanelLabels[i].setBackground(Color.RED);
-                    break;
-                case MISPLACED:
-                    cluesPanelLabels[i].setBackground(Color.BLUE);
-                    break;
-                case WRONG:
-                    cluesPanelLabels[i].setBackground(Color.GREEN);
-                    break;
+
+        if (_gameController.getGameMode() == GameMode.NUMERIC) {
+            // Display numeric clues
+            for (int i = 0; i < Clue.values().length; i++) {
+                int numericClue = attempt.  getNumericClues()[i];
+                // Display numeric clues in the JLabels
+                cluesPanelLabels[i].setText(Integer.toString(numericClue));
+            }
+        } else {
+            // Display colored dots
+            for (int i = 0; i < _gameController.getNbColorsInCombination(); i++) {
+                switch (attempt.getClues()[i]) {
+                    case WELL_PLACED:
+                        cluesPanelLabels[i].setBackground(Color.RED);
+                        break;
+                    case MISPLACED:
+                        cluesPanelLabels[i].setBackground(Color.GRAY);
+                        break;
+                    case WRONG:
+                        cluesPanelLabels[i].setBackground(Color.WHITE);
+                        break;
+                }
             }
         }
-
-        System.out.println("debug1");
 
         _attemptIndex++;
     }
 
+
     @Override
     public void onRoundFinished() {
-        System.out.println("debug2");
+        System.out.println("roundFini");
         // Display a message to the user
         JOptionPane.showMessageDialog(this, "Round finished");
         // When the user clicks OK, the round should be reset
@@ -318,6 +319,7 @@ public class GameWindow extends JFrame implements GameObserver {
     }
 
     private void resetRound() {
+        System.out.println("resetRound");
         // Reset the attempt index
         _attemptIndex = 1;
 
@@ -342,10 +344,11 @@ public class GameWindow extends JFrame implements GameObserver {
     @Override
     public void onGameFinished() {
         // Display a message to the user
-        JOptionPane.showMessageDialog(this, "Game finished");
+        //JOptionPane.showMessageDialog(this, "Game finished");
 
         // When the user clicks OK, the game should be disposed and the menu window should be displayed
         //new MenuWindow(_gameController);
         dispose();
     }
 }
+

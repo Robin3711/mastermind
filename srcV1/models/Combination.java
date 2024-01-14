@@ -4,37 +4,41 @@ public class Combination {
     private int _nbColorsInCombination = 4;
     protected PawnColor[] _pawns;
 
-    protected Combination() {
-        _pawns = new PawnColor[getNbColorsInCombination()];
-    }
-
-    public Combination(int nbColorsInCombination) {
+    public Combination(int nbColorsInCombination)
+    {
         this._nbColorsInCombination = nbColorsInCombination;
     }
 
-    public int getNbColorsInCombination() {
+    public int getNbColorsInCombination()
+    {
         return _nbColorsInCombination;
     }
 
-    public void setPawns(PawnColor[] pawns) {
+    public void setPawns(PawnColor[] pawns)
+    {
         // Verify that the number of pawns is correct
-        if (pawns.length != getNbColorsInCombination()) {
+        if (pawns.length != getNbColorsInCombination())
+        if (pawns.length != getNbColorsInCombination())
+        {
             return;
         }
         this._pawns = pawns;
     }
 
-    public PawnColor[] getPawns() {
+    public PawnColor[] getPawns()
+    {
         return _pawns;
     }
 
-    protected int getNbOccurences(PawnColor pawnColor) {
-        int nbOccurences = 0;
-        for (PawnColor pawn: _pawns) {
-            if (pawn == pawnColor) {
-                nbOccurences++;
-            }
+    @Override
+    public String toString()
+    {
+        StringBuilder value = new StringBuilder(" ");
+        for(int i = 0; i < this.getNbColorsInCombination(); i++)
+        {
+            value.append(this._pawns[i].name());
+            value.append(" ");
         }
-        return nbOccurences;
+        return value.toString();
     }
 }

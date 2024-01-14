@@ -4,9 +4,11 @@ import models.Combination;
 import models.Game;
 import models.GameMode;
 import models.PawnColor;
+import views.EndWindow;
 import views.GameWindow;
 
-public class GameController {
+public class GameController
+{
     private Game _game;
     private String _username;
     private GameMode _gameMode;
@@ -15,7 +17,8 @@ public class GameController {
     private int _nbColorsInCombination;
     private int _nbAttempts;
 
-    public void startGame(String username, GameMode gameMode, int nbRounds, int nbColors, int nbColorsInCombination, int nbAttempts) {
+    public void startGame(String username, GameMode gameMode, int nbRounds, int nbColors, int nbColorsInCombination, int nbAttempts)
+    {
         this._username = username;
         this._gameMode = gameMode;
         this._nbRounds = nbRounds;
@@ -24,24 +27,17 @@ public class GameController {
         this._nbAttempts = nbAttempts;
         this._game = new Game(nbRounds);
 
-        // Crée la vue du jeu
+        // Crée la vue du jeu et mise en place de l'observeur
         GameWindow gameWindow = new GameWindow(this);
-
         _game.addObserver(gameWindow);
 
-        _game.nextRound(nbAttempts, nbColorsInCombination, gameMode);
-
-        // Affiche les paramètres de la partie
-        System.out.println("Username: " + this._username);
-        System.out.println("Game mode: " + this._gameMode);
-        System.out.println("Number of rounds: " + this._nbRounds);
-        System.out.println("Number of colors: " + this._nbColors);
-        System.out.println("Number of colors in the solution: " + this._nbColorsInCombination);
-        System.out.println("Number of attempts: " + this._nbAttempts);
+        // lance le tour 1
+        nextRound();
     }
 
     // getters
-    public Game getGame() {
+    public Game getGame()
+    {
         return _game;
     }
 
@@ -69,13 +65,39 @@ public class GameController {
         return _nbAttempts;
     }
 
-    public void submitCombination(PawnColor[] pawnColors) {
+    public int getNbRoundsWon()
+    {
+        return _game.getNbRoundsWon();
+    }
+
+    public void submitCombination(PawnColor[] pawnColors)
+    {
         Combination combination = new Combination(_nbColorsInCombination);
         combination.setPawns(pawnColors);
         _game.submitCombination(combination);
     }
 
-    public void nextRound() {
-        _game.nextRound(_nbAttempts, _nbColorsInCombination, _gameMode);
+    public void nextRound()
+    {
+        // le controlleur est chargé de verifier si le jeu est fini
+        if(_game.isGameOver())
+        {
+            endGame();
+        }
+        else
+        {
+            _game.nextRound(_nbAttempts, _nbColorsInCombination, _gameMode);
+        }
+    }
+
+    private void endGame()
+    {
+        // créer le menu de fin
+        new EndWindow(this);
+    }
+
+    public void forfeitCurrendRound()
+    {
+        this._game.getCurrentRound()._forfeited = true;
     }
 }
