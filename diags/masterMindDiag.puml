@@ -1,0 +1,164 @@
+@startuml
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide enum methods
+hide interface attributes
+
+skinparam class {
+    backgroundColor<<enum>> Orange
+    backgroundColor<<interface>> LightGreen
+    backgroundColor<<abstract>> LightBlue
+    backgroundColor LightGray
+}
+
+package views
+{
+  class MenuWindow
+  {
+    + MenuWindow(gameController : GameController) : MenuWindow
+  }
+  class GameWindow implements models.GameObserver
+  {
+    -_attemptIndex : Integer
+    -_isNumeric : Boolean
+    + GameWindow(gameController : GameController) : GameWindow
+    + onAttemptPerformed(attempt : Attempt)
+    + onRoundFinished()
+    - resetRound()
+    + onGameFinished()Attempt
+  }
+  class EndWindow
+  {
+  + EndWindow(gameController : GameController) : EndWindow
+  }
+}
+
+package controllers
+{
+  class GameController
+  {
+    -_username : String
+    -_nbRounds : Integer
+    -_nbColors : Integer
+    -_nbColorsInCombination : Integer
+    -_nbAttempts : Integer
+    + startGame(username : String, gameMode : GameWindow, nbRounds : Integer, nbColors : Integer, nbColorsInCombination : Integer, nbAttempts : Integer)
+    + submitCombination(pawnColors : PawnColor[])
+    + nextRound()
+    - endGame()
+   }
+}
+
+package models
+{
+  class Game
+  {
+    -_currentRound : Integer
+    + Game(nbRounds : Integer) : Game
+    + calculateScoreGame() : Integer
+    + nextRound(nbAttempts : Integer, nbColorsInCombination : Integer,gameMode : GameMode)
+    + public submitCombination(combination : Combination)
+    + addObserver(gameObserver : GameObserver)
+    - notifyAttemptPerformed(attempt : Attempt)
+    - notifyRoundFinished()
+    - notifyGameFinished()
+  }
+
+  class Round
+  {
+    -_isWon : Boolean
+    + Round(nbAttempts : Integer, nbColorsInCombination : Integer, gameMode : GameMode) : Round
+    + calculateScoreRound() : Integer
+    + submitCombination(combination : Combination) : Attempt
+  }
+
+  class Attempt
+  {
+    + Attempt(combinationSubmitted : Combination, clues : Clue[]) : Attempt
+    + sortClues()
+  }
+
+  class Combination
+  {
+    + _nbColorsInCombination : Integer
+    + Combination(int nbColorsInCombination) : Combination
+  }
+
+  class Solution extends Combination
+  {
+    + Solution(nbColorsInCombination : Integer) : Solution
+    + generateSolution()
+    + compareWithCombination(combination : Combination) : Clue[]
+  }
+  interface GameObserver <<interface>>
+  {
+    + onAttemptPerformed(attempt : Attempt)
+    + onRoundFinished()
+    + onGameFinished()
+  }
+  enum Clue <<enum>>
+  {
+    + WELL_PLACED
+    + MISPLACED
+    + WRONG
+  }
+  enum GameMode <<enum>>
+  {
+    + CLASSIC
+    + EASY
+    + NUMERIC
+  }
+  enum PawnColor <<enum>>
+  {
+    + RED
+    + GREEN
+    + BLUE
+    + YELLOW
+    + ORANGE
+    + PINK
+    + LIGHT_GRAY
+    + MAGENTA
+  }
+}
+
+class MasterMindApp
+{
+    + main()
+}
+
+models.Game *-> "3..5 \n -_rounds" models.Round : > <<owns>>
+models.Game *-> "1..* \n -_observers" models.GameObserver : > <<owns>>
+models.Game ..> models.GameMode : > <<uses>>
+models.Game ..> models.Combination : > <<uses>>
+
+models.Round *--> "1 \n -_solution" models.Solution : > <<owns>>
+models.Round *-d-> "10..12 \n -_attempts" models.Attempt : > <<owns>>
+models.Round o--> "1 \n -_gameMode" models.GameMode : > <<owns>>
+models.Round ..> models.Combination : > <<uses>>
+models.Round ..> models.Clue : > <<uses>>
+
+models.Attempt *-> "1\n- _combinationSubmited" models.Combination : > <<owns>>
+models.Attempt *-> "1\n- _clues" models.Clue : > <<owns>>
+
+models.Combination o-> "4..6\n # _PAWNS" models.PawnColor : > <<contains>>
+
+models.Solution .d.> models.PawnColor : > <<uses>>
+models.Solution .d.> models.Clue : > <<uses>>
+
+GameController *-d-> "1 \n -_game" models.Game : > <<owns>>
+GameController .u.> GameWindow : > <<create>>
+GameController .u.> EndWindow : > <<create>>
+GameController .d.> models.GameMode : > <<uses>>
+
+MenuWindow .d.> GameController : > <<uses>>
+MenuWindow .d.> models.GameMode : > <<uses>>
+
+GameWindow .d.> GameController : > <<uses>>
+GameWindow .d.> models.GameMode : > <<uses>>
+
+EndWindow .d.> GameController : > <<uses>>
+
+MasterMindApp .d..> GameController : > <<create>>
+MasterMindApp .d..> MenuWindow : > <<create>>
+@enduml
