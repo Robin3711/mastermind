@@ -18,7 +18,7 @@ package views
   {
     + MenuWindow(gameController : GameController) : MenuWindow
   }
-  class GameWindow implements .models.GameObserver
+  class GameWindow implements models.GameObserver
   {
     -_attemptIndex : Integer
     -_isNumeric : Boolean
@@ -91,25 +91,25 @@ package models
     + generateSolution()
     + compareWithCombination(combination : Combination) : Clue[]
   }
-  interface GameObserver
+  interface GameObserver <<interface>>
   {
     + onAttemptPerformed(attempt : Attempt)
     + onRoundFinished()
     + onGameFinished()
   }
-  enum Clue
+  enum Clue <<enum>>
   {
     + WELL_PLACED
     + MISPLACED
     + WRONG
   }
-  enum GameMode
+  enum GameMode <<enum>>
   {
     + CLASSIC
     + EASY
     + NUMERIC
   }
-  enum PawnColor
+  enum PawnColor <<enum>>
   {
     + RED
     + GREEN
@@ -127,35 +127,35 @@ class MasterMindApp
     + main()
 }
 
-Game *-> "3..5 \n -_rounds" Round : > <<owns>>
-Game *-> "1..* \n -_observers" GameObserver : > <<owns>>
-Game ..> GameMode : > <<uses>>
-Game ..> Combination : > <<uses>>
+models.Game *-> "3..5 \n -_rounds" models.Round : > <<owns>>
+models.Game *-> "1..* \n -_observers" models.GameObserver : > <<owns>>
+models.Game ..> models.GameMode : > <<uses>>
+models.Game ..> models.Combination : > <<uses>>
 
-Round *--> "1 \n -_solution" Solution : > <<owns>>
-Round *-d-> "10..12 \n -_attempts" Attempt : > <<owns>>
-Round o--> "1 \n -_gamemod" GameMode : > <<owns>>
-Round ..> Combination : > <<uses>>
-Round ..> Clue : > <<uses>>
+models.Round *--> "1 \n -_solution" models.Solution : > <<owns>>
+models.Round *-d-> "10..12 \n -_attempts" models.Attempt : > <<owns>>
+models.Round o--> "1 \n -_gameMode" models.GameMode : > <<owns>>
+models.Round ..> models.Combination : > <<uses>>
+models.Round ..> models.Clue : > <<uses>>
 
-Attempt *-> "1\n- _combinationSubmited" Combination : > <<owns>>
-Attempt *-> "1\n- _clues" Clue : > <<owns>>
+models.Attempt *-> "1\n- _combinationSubmited" models.Combination : > <<owns>>
+models.Attempt *-> "1\n- _clues" models.Clue : > <<owns>>
 
-Combination o-> "4..6\n # _PAWNS" PawnColor : > <<contains>>
+models.Combination o-> "4..6\n # _PAWNS" models.PawnColor : > <<contains>>
 
-Solution .d.> PawnColor : > <<uses>>
-Solution .d.> Clue : > <<uses>>
+models.Solution .d.> models.PawnColor : > <<uses>>
+models.Solution .d.> models.Clue : > <<uses>>
 
-GameController *-d-> "1 \n -_game" Game : > <<owns>>
+GameController *-d-> "1 \n -_game" models.Game : > <<owns>>
 GameController .u.> GameWindow : > <<create>>
 GameController .u.> EndWindow : > <<create>>
-GameController .d.> GameMode : > <<uses>>
+GameController .d.> models.GameMode : > <<uses>>
 
 MenuWindow .d.> GameController : > <<uses>>
-MenuWindow .d.> GameMode : > <<uses>>
+MenuWindow .d.> models.GameMode : > <<uses>>
 
 GameWindow .d.> GameController : > <<uses>>
-GameWindow .d.> GameMode : > <<uses>>
+GameWindow .d.> models.GameMode : > <<uses>>
 
 EndWindow .d.> GameController : > <<uses>>
 
